@@ -1,0 +1,20 @@
+<p id="error"></p>
+Email : <br><input type="text" id="email" /><br>
+Password : <br><input type="password" id="password" /><br>
+<input type="button" onClick = "login()" value="login" />
+	
+<script>
+   function login(){
+	   $("#error").html("");
+		$.post('/users/login', {email:$("#email").val(),password:$("#password").val()},
+				function(data) {
+  					if(data.indexOf("login failed")!=-1)
+  						$("#error").html("login failed,try again !!");
+  					else if(data.indexOf("deactivated")!=-1)
+  						$("#error").html("user deactivated,Please contact admin !!");
+  					else
+  						$(location).attr('href',"/profile.jsp?url=MyItems.jsp");
+				}
+		);
+   }
+</script>

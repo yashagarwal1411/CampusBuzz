@@ -1,0 +1,24 @@
+<p id="error"/>
+	Email : <br><input type="text" id="email" /><br>
+	Password : <br><input type="password" id="password" /><br>
+	Confirm Password : <br><input type="password" id="confirm-password" /><br>
+	<input type="button" value="signup" onClick="signup()" />
+
+<script>
+	function signup(){
+	   $("#error").html("");
+	   if($("#password").val()!=$("#confirm-password").val()){
+		   $("#error").html("Passwords don't match !!");
+	   }else{
+			$.post('/users/signup', {email:$("#email").val(),password:$("#password").val()},
+					function(data) {
+						if(data.indexOf("success")!=-1)
+							$("#error").html("User Created !!");
+						else if(data.indexOf("failure")!=-1)
+							$("#error").html("Signup failed,Please try again!!");
+					}
+			);
+		}
+	}
+
+</script>
