@@ -33,7 +33,7 @@
 			
 			$("#to").val(getQueryStringParam("to"));
 			if(getQueryStringParam("title")!=null)
-				$("#subject").val("in refrence to your item '"+getQueryStringParam("title")+"' priced "+getQueryStringParam("price")+"$");
+				$("#subject").val("In reference to your item '"+getQueryStringParam("title")+"' priced "+getQueryStringParam("price")+"$");
 			
 		</script>
 	</body>

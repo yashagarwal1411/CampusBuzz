@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -25,9 +28,11 @@ public class DatastoreUtils {
 
 	public static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	public static final Logger _log = Logger.getLogger(DatastoreUtils.class.getName());
+	
 	public static Key put(Entity newEntity)
 	{
 		datastore.put(newEntity);
+		 _log.info("Entity saved #"+newEntity.toString());
 		return newEntity.getKey();
 	}
 	
@@ -69,7 +74,7 @@ public class DatastoreUtils {
     }
     
     public static String getUserName(String id){
-    	_log.info("----------------"+id+"--------------------");
+    	
     	Entity mUser = getEntity(KeyFactory.stringToKey(id));
     	
 		if(mUser.hasProperty("fname")&&!mUser.getProperty("fname").equals(""))
@@ -89,6 +94,7 @@ public class DatastoreUtils {
     public static boolean deleteEntity(Key entityKey)
     {
     	datastore.delete(entityKey);
+    	 _log.info("Entity deleted #"+entityKey.toString());
     	return true;//to indicate success
     }
     
@@ -139,11 +145,18 @@ public class DatastoreUtils {
 			for(Entity user : users)
 			{
 				ItemUtils.deleteAllItems(user);
+				BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+				if(!user.getProperty("PicBlobKey").toString().equals("null"))
+			    {	
+					
+			    	BlobKey blobKey = new BlobKey(user.getProperty("PicBlobKey").toString());
+			    	blobstoreService.delete(blobKey);
+			    }
 				deleteEntity(user.getKey());
 			}
 		}
 		catch (Exception e) {
-			// TODO: handle exception
+			
 		}			
 			
     	Entity user1 = Utils.createEntity("User");
@@ -152,7 +165,10 @@ public class DatastoreUtils {
 		user1.setProperty("fname", "");
 		user1.setProperty("lname", "");
 		user1.setProperty("isAdmin", "1");
+		user1.setProperty("PicBlobKey", "null");
+		user1.setProperty("Description", "");
 		Utils.put(user1);
+		 _log.info("Test User 'hardcodetest1@gmail.com 'created");
 		
 		Entity user2 = Utils.createEntity("User");
 		user2.setProperty("Email","hardcodetest2@gmail.com");
@@ -160,7 +176,10 @@ public class DatastoreUtils {
 		user2.setProperty("fname", "");
 		user2.setProperty("lname", "");
 		user2.setProperty("isAdmin", "1");
+		user2.setProperty("PicBlobKey", "null");
+		user2.setProperty("Description", "");
 		Utils.put(user2);
+		 _log.info("Test User 'hardcodetes2@gmail.com 'created");
     }
     
 }

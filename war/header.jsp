@@ -89,6 +89,7 @@
 			<a href="/profile.jsp?url=MyItems.jsp">My Account | </a>
 			<%} %>
 			<a href="/profile.jsp?url=MyItems.jsp" class="my-products">My products | </a>
+			<a href="" id="google-login">Login via Google | </a>
 			<a href="" class="login">Login | </a>
 			<a href="/users/logout" id="logout">Logout</a>
 			<a href="" class="signup">Signup</a>
@@ -123,13 +124,20 @@
 		
 
 			//check session
-			<% if(request.getSession().getAttribute("userKey")!=null){%>
+			<% 
+			
+			if(request.getSession().getAttribute("userKey")!=null){
+			%>
+				$("#google-login").hide();
 				$(".login").hide();
 				$(".signup").hide();
 				$("#logout").show();
 				$(".my-products").show();
 				
-			<%}else{%>
+			<%}else{
+				String googleLogin = Utils.getLoginUrl(request);
+			%>
+				$("#google-login").attr("href","<%=googleLogin%>");
 				$("#logout").hide();
 				$(".my-products").hide();
 			<%}%>

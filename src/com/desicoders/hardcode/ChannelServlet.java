@@ -1,7 +1,6 @@
 package com.desicoders.hardcode;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class ChannelServlet extends HttpServlet {
 	  
 	  ChannelService channelService = ChannelServiceFactory.getChannelService();
-	  public static final Logger _log = Logger.getLogger(ChannelServlet.class.getName());
+	
 	  @Override
 	  public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String action = Utils.getActionFromUrl(req);

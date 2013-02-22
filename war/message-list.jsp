@@ -21,11 +21,15 @@
 			}
 			
 			.email{
-				width: 40%;
+				width: 30%;
 			}
 			
 			.sub{
-				width: 60%;
+				width: 40%;
+			}
+			
+			.date{
+				width:30%;
 			}
 			
 			tr{
@@ -58,11 +62,11 @@
 			List<Entity> messages = null;
 			if(type.equalsIgnoreCase("inbox")){
 				messages= Utils.getInbox(request);
-				header = "<tr><th class='email'>From</th><th class='sub'>Subject</th></tr>";
+				header = "<tr><th class='email'>From</th><th class='sub'>Subject</th><th class='date'>Time</th></tr>";
 			}
 			if(type.equalsIgnoreCase("sent")){
 				messages= Utils.getSent(request);
-				header = "<tr><th class='email'>To</th><th class='sub'>Subject</th></tr>";
+				header = "<tr><th class='email'>To</th><th class='sub'>Subject</th><th class='date'>Time</th></tr>";
 			} 
 			
 			
@@ -95,10 +99,13 @@
 				if(subject.length()>30)
 					subject = subject.substring(0,30)+"...";
 				
+				String date = (String) e.getProperty("date");
+				
+				
 				
 		%>
 			<script type="text/javascript">
-				var row = "<tr onClick=\x22loadMsg('<%=key%>')\x22><td class='email'><%=email%></td><td class='sub'><%=subject%></td></tr>";
+				var row = "<tr onClick=\x22loadMsg('<%=key%>')\x22><td class='email'><%=email%></td><td class='sub'><%=subject%></td><td class='date'><%=date%></td></tr>";
 				$(row).appendTo("#message-tabel tbody")
 			</script>
 		 <%	}	%>

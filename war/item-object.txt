@@ -34,7 +34,7 @@
 						<%
 						String description = item.getProperty("Description").toString();
 						if(description.length()>50)
-							out.println(description.subSequence(0, 50)+"....");
+							out.println(description.subSequence(0, 30)+"....");
 						else
 							out.println(description);
 						%>

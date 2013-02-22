@@ -54,7 +54,7 @@
 			<div class="box">
         		<h1>PRICE : <%= item.getProperty("Price") %> $</h1>  
         		<ul style="margin-top:10px;">
-					<li>OWNER : <% out.print(owner.getProperty("fname")+" "+owner.getProperty("lname")); %></li>
+					<li><a href="/users/details/<%=owner.getKey().getId()%>" style='text-decoration:none'>OWNER : <% out.print(owner.getProperty("fname")+" "+owner.getProperty("lname")); %></a></li>
 					<li>CREATION TIME : <%= item.getProperty("CreationTime") %></li>
 					<li>EXPIRATION TIME : <%= item.getProperty("ExpirationTime") %></li>
 				</ul>      		

@@ -19,14 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class Utils extends DatastoreUtils{
-	
-	//static PersistenceManager pm = PMF.get().getPersistenceManager();
 
 	static void print(String toPrint,HttpServletResponse resp) throws IOException
 	{
@@ -88,41 +86,6 @@ public class Utils extends DatastoreUtils{
 		 return new BigInteger(130, random).toString(32);
 	}
 	
-	static void createSignupVerification(String emailAddress,String password) throws AddressException, MessagingException{
-		String random = getRandomString();
-		String link = "http://campus-buzz.appspot.com/users/verifysignup?email="+emailAddress+"&code="+random;
-		
-		Entity invite = createEntity("SignupVerification");
-		invite.setProperty("Email",emailAddress);
-		invite.setProperty("Password",password);
-		invite.setProperty("Code",random);
-		put(invite);
-		//send mail
-		Utils.Email mail = new Utils.Email();
-		mail.to = emailAddress;
-		mail.from = "vishesh.singhal91@gmail.com";
-		mail.subject = "confirm signup";
-		mail.body = "follow the link given below to verify the signup,as of now it's just a string,so copy and paste in browser "+link;
-		mail.sendMail();
-	}
-	
-	static void inviteAdmin(String emailAddress) throws AddressException, MessagingException{
-		String random = getRandomString();
-		String link = "http://campus-buzz.appspot.com/admin-signup.jsp?email="+emailAddress+"&code="+random;
-		
-		Entity invite = createEntity("AdminInvite");
-		invite.setProperty("Email",emailAddress);
-		invite.setProperty("Code",random);
-		put(invite);
-		//send mail
-		Utils.Email mail = new Utils.Email();
-		mail.to = emailAddress;
-		mail.from = "vishesh.singhal91@gmail.com";
-		mail.subject = "admin invite from campus-buzz";
-		mail.body = "follow the link given below to create admin account,as of now it's just a string,so copy and paste in browser "+link;
-		mail.sendMail();
-	}
-	
 	static public boolean isCurrentUserAdmin(HttpServletRequest req)
 	{
 		Entity user = Utils.getUserFromSession(req);
@@ -153,16 +116,6 @@ public class Utils extends DatastoreUtils{
 		
 	}
 	
-	static public List<Entity> getDrafts(HttpServletRequest req){
-		String myEmail = (String) getUserFromSession(req).getProperty("Email");
-		Filter from = FilterOperator.EQUAL.of("from",myEmail);
-		Filter isDraft = FilterOperator.EQUAL.of("type","draft");
-		CompositeFilter filter = CompositeFilterOperator.and(from,isDraft);
-		Query q = new Query("Message").setFilter(filter);
-		List<Entity> drafts = Utils.runQuery(q);
-		return drafts;
-	}
-	
 	static public boolean isOnline(String userId){
 		 Filter f = FilterOperator.EQUAL.of("UserId",userId);
 		 Query q = new Query("Status").setFilter(f);
@@ -171,5 +124,10 @@ public class Utils extends DatastoreUtils{
 			 return true;
 		 else
 			 return false;
+	}
+	
+	static public String getLoginUrl(HttpServletRequest req){
+		 UserService userService = UserServiceFactory.getUserService();
+		 return userService.createLoginURL("/users/googlelogin");
 	}
 }

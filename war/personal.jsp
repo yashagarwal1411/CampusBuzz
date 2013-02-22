@@ -1,14 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.desicoders.hardcode.Utils"%>
 <%@page import="com.google.appengine.api.datastore.Entity" %>
-
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
+<%
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+%>
 <html>
 	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<script type="text/javascript" src="/js/tiny_mce/tiny_mce.js"></script>
+		<script type="text/javascript" src="/js/tiny_mce/rtf.js"></script>	
 		<%@include file="iframe-header.jsp"%>
 		
 	</head>
 	<body>
 		<% Entity user = Utils.getUserFromSession(request);
+		   Long userId = user.getKey().getId();
 		   String email = (String) user.getProperty("Email");
 		   String fname= "";
 		   String lname= "";
@@ -19,26 +27,41 @@
 		   
 		   
 		%>
+		
 		<p id="page-message"></p>
-		<form method="post" action="/users/edit">
-		  <table class="buzz-text">
-			<tr>
-				<td>Email :</td>
-				<td> <%=email %></td>
-			</tr>
-			<tr>
-				<td>First Name :</td>
-				<td><input type="text" name="fname" value="<%=fname %>"></input></td>
+		<form method="post"  action='<%= blobstoreService.createUploadUrl("/users/edit/"+userId) %>' enctype="multipart/form-data">
+		  <div class="buzz-text">
+			
+				Email :
+				<%=email %>
+				<br /><br />
+				First Name :
+				<input type="text" name="fname" value="<%=fname %>"></input> 
 				
-			</tr>
-			<tr>
-				<td>Last Name :</td>
-				<td><input type="text" name="lname" value="<%=lname %>"></input></td>
-			</tr>
-			<tr>
-				
-			</tr>
-		  </table>
+				<br /><br />
+				Last Name :
+				<input type="text" name="lname" value="<%=lname %>"></input>
+				<br /><br />
+				Description :		
+			
+			<textarea rows="15" cols="80" style="width: 80%" name="description" ><%=user.getProperty("Description") %></textarea>
+				<br /><br />
+				<div style="">
+				Current Image :
+				<%
+				String imgSrc = "/users/pic/"+userId;
+				if(user.getProperty("PicBlobKey").toString().equalsIgnoreCase("null"))
+				{
+					imgSrc = "/css/images/noimageavailable.jpg";
+				}
+				%>
+				<img src="<%=imgSrc %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="160" height="188" />
+				</div>
+				<br /><br />
+				Image(Opt.)(Max. Size: 1MB) :
+				<input type="file" name="pic" accept="image/*" />
+			
+		  </div>
 		</form>
 		<br>
 		

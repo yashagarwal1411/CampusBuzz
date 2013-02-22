@@ -29,10 +29,14 @@
 			}
 			String subject = (String) msg.getProperty("subject");
 			String body = (String) msg.getProperty("body");
+			String date = (String) msg.getProperty("date");
 		%>
+		
 		<p class="buzz-text">Subject :</p>
 		<%=subject %>
 		<p class="buzz-text">Message :</p>
 		<%=body %>
+		<p class="buzz-text">Time :</p>
+		<%=date %>
 	</body>
 </html>

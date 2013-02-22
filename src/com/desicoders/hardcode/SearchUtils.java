@@ -1,15 +1,12 @@
 package com.desicoders.hardcode;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
-
-
-import java.util.Set;
 
 /*
 B-C-01	The Application allows Registered and Non-Registered Users to search for Items based on any of the following Item fields:
@@ -38,15 +35,15 @@ public class SearchUtils {
 		{
 			return null;
 		}
-		for(String s:queryTokens)
-		{
-			q.addFilter("FTS", FilterOperator.EQUAL, s);
+		//for(String s:queryTokens)
+		//{
+			//q.addFilter("FTS", FilterOperator.EQUAL, s);
 			//queryTokensZ.add(s+"z");
 			//q.addFilter("FTS", FilterOperator.LESS_THAN_OR_EQUAL, s+"z");
 			//q.addFilter("FTS", FilterOperator.GREATER_THAN_OR_EQUAL, s);
-		}
+		//}
 		//
-		//q.addFilter("FTS", FilterOperator.IN, queryTokens);
+		q.addFilter("FTS", FilterOperator.IN, queryTokens);
 		//Filter searchFTS1 = FilterOperator.GREATER_THAN_OR_EQUAL.of("FTS",queryTokens);
 		//Filter searchFTS2 = FilterOperator.LESS_THAN_OR_EQUAL.of("FTS", queryTokensZ);
 		//CompositeFilter filter = CompositeFilterOperator.and(searchFTS1,searchFTS2);

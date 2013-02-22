@@ -2,7 +2,6 @@ package com.desicoders.hardcode;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,9 +19,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 public class ChannelTracker extends HttpServlet {
 	  
 	  ChannelService channelService = ChannelServiceFactory.getChannelService();
-	  public static final Logger _log = Logger.getLogger(ChannelTracker.class.getName());
-	  
-	  
+	 
 	  @Override
 	  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		  

@@ -9,19 +9,44 @@
 	
 	<body>
 		<p id="page-message"/>
-		<form method="get" action="/users/adminInvite">
-			<p class="buzz-text">Email : </p>	
-			<input type="text" id="email" name="email" /><br>
-			<input type="submit" class="button" value="invite" />
+		<form method="post" action="/users/createAdmin" class="buzz-text">
+			<table>
+			<tr>
+				<td>Email : </td>
+				<td><input type="text" id="email" name="email" /></td>
+			</tr>
+			<tr>
+				<td>Password :</td>
+				<td><input type="password" id="password" name="password"/></td>
+			</tr>
+			<tr>
+				<td>Confirm Password :</td>
+				<td><input type="password" id="confirm-password" /></td>
+			</tr>
+
+			</table>
+			<input type="button" class="button" value="Create Admin" onClick="createAdmin()" />
 		</form>
-		<!-- fill the outstanding reqs here and provide a delete,resend mail link with each -->
+		
 		<script type="text/javascript">
 			var qString = location.search;
 		
 			if(qString.indexOf("success")!=-1)
-			$("#page-message").html("invitation sent");
-		else if(qString.indexOf("failure")!=-1)
-			$("#page-message").html("invitation failed,Please try again !!");
+				$("#page-message").html("Admin Created");
+			else if(qString.indexOf("failure")!=-1)
+				$("#page-message").html("Admin creation failed,Please try again !!");
+			
+		
+			function createAdmin(){
+			   $("#page-message").html("");
+			   if($("#password").val()!=$("#confirm-password").val()){
+				   $("#page-message").html("Passwords don't match !!");
+			   }else{
+					$('form').submit();
+				}
+			}
+
+	
 		</script>
 	</body>
 </html>

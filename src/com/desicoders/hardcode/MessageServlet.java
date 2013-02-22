@@ -1,6 +1,8 @@
 package com.desicoders.hardcode;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +12,7 @@ import com.google.appengine.api.datastore.Entity;
 
 @SuppressWarnings("serial")
 public class MessageServlet extends HttpServlet{
-
+	public static final Logger _log = Logger.getLogger(MessageServlet.class.getName());
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		
@@ -29,8 +31,10 @@ public class MessageServlet extends HttpServlet{
 				message.setProperty("from",from);
 				message.setProperty("subject",subject);
 				message.setProperty("body",body);
+				message.setProperty("date", new Date());
 				
 				Utils.put(message);
+				_log.info("message saved #"+message.toString());
 			}
 			resp.sendRedirect("/profile.jsp?url=compose.jsp&sent=true");
 			return;

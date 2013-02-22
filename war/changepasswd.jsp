@@ -28,10 +28,12 @@
 		
 		<br>
 		<input type="button" class="button" value="Change" style="margin-left:20px" onClick='changePasswd()'/>
-		<input type="button" class="button" value="Cancel" />
+		
 		
 	 </form>	
-	 
+	 <p >
+	 If you have logged in via google , then you can not change your password from here.
+	 </p>
 	 <script>
 			function changePasswd(){
 				$("#page-message").html("");

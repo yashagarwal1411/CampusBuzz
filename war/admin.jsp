@@ -5,6 +5,12 @@
 <%@page import="java.util.List" %>
 
 <html>
+	<%
+		if(Utils.getUserFromSession(request)==null || !Utils.getUserFromSession(request).hasProperty("isAdmin")){
+			response.sendRedirect("/");
+			return;
+		}
+	%>
 	<head>
 		<style type="text/css">
 			#iframe{
@@ -39,7 +45,7 @@
 			    	<h3 style="margin-top:0;">Administration</h3>
 			    	<ul>
 			    	<li><a href="#" onClick="reloadIframe('userops.jsp')">User Operation</a></li>
-					<li><a href="#" onClick="reloadIframe('invite-admin.jsp')">Invite Admin</a></li>
+					<li><a href="#" onClick="reloadIframe('invite-admin.jsp')">Create Admin</a></li>
 					</ul>
 			    </div >
 				

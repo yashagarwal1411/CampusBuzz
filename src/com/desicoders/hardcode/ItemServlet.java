@@ -29,7 +29,7 @@ public class ItemServlet extends HttpServlet{
 		
 		PrintWriter out = resp.getWriter();
 		Entity currentUser = Utils.getUserFromSession(req);
-		_log.info("==============="+currentUser.toString());
+		
 		String url = req.getRequestURL().toString();
 		String[] urlPaths = url.split("/");
 		if (urlPaths.length < 5) {
@@ -51,6 +51,7 @@ public class ItemServlet extends HttpServlet{
 				return;
 			}
 			BlobKey blobKey = null;
+			@SuppressWarnings("deprecation")
 			Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
 	        blobKey = blobs.get("pic");
 	        final BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
@@ -68,7 +69,7 @@ public class ItemServlet extends HttpServlet{
 				price = Float.parseFloat(req.getParameter("price"));
 			}
 			catch (Exception e) {
-				// TODO: handle exception
+				
 			}
 			ItemUtils.addItem(title, description, price,blobKey, currentUser);
 			out.print("<html><head> <meta http-equiv='refresh' content='3;url=/profile.jsp?url=MyItems.jsp' /> Item added!!! </head></html>");
@@ -88,7 +89,7 @@ public class ItemServlet extends HttpServlet{
 				price = Float.parseFloat(req.getParameter("price"));
 			}
 			catch (Exception e) {
-				// TODO: handle exception
+				
 			}		
 			boolean Active = req.getParameterMap().containsKey("active");
 			
@@ -182,7 +183,7 @@ public class ItemServlet extends HttpServlet{
 				try {
 					rd.forward(req, resp);
 				} catch (ServletException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 				return;
@@ -203,7 +204,7 @@ public class ItemServlet extends HttpServlet{
 			try {
 				rd.forward(req, resp);
 			} catch (ServletException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			return;

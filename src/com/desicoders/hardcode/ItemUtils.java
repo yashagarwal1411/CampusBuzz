@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,6 +42,7 @@ A button to communicate / message the Seller as described in B-D
 
 public class ItemUtils {
 
+	public static final Logger _log = Logger.getLogger(ItemUtils.class.getName());
 	public static List<Entity> listPostedItems(Entity user)
 	{
 		if(user == null)
@@ -55,7 +57,6 @@ public class ItemUtils {
 		}
 		catch(Exception e)
 		{
-			//do something
 			return null;
 		}
 		
@@ -76,6 +77,7 @@ public class ItemUtils {
 		    	blobstoreService.delete(blobKey);
 		    }
 			DatastoreUtils.deleteEntity(item.getKey());
+			_log.info("item deleted #"+item.toString());
 			return true;
 		}
 		return false; //if the item is  not deleted
@@ -99,6 +101,7 @@ public class ItemUtils {
 		    	blobstoreService.delete(blobKey);
 		    }
 			DatastoreUtils.deleteEntity(item.getKey());
+			_log.info("item deleted #"+item.toString());
 		}		
 		return true; 
 	}
@@ -139,12 +142,12 @@ public class ItemUtils {
 	     }
 		 
 		 Utils.put(item);		 
-		 
+		 _log.info("item added #"+item.toString());
 		 return true;//to indicate success
 	}
 	
 	//to check if item is pass its expiration date
-	static public	boolean isExpired(Entity item)
+	static public boolean isExpired(Entity item)
 	{
 		Date currentDate = new Date();
 		if(currentDate.after((Date)item.getProperty("ExpirationTime")))
@@ -175,6 +178,7 @@ public class ItemUtils {
 				 	item.setProperty("PicBlobKey", blobKey.getKeyString());
 		     }
 			 Utils.put(item);
+			 _log.info("item edited #"+item.toString());
 			 return true;//as the request was completed
 			
 		}
@@ -211,6 +215,7 @@ public class ItemUtils {
 		{
 			item.setProperty("isActive",1);
 			Utils.put(item);
+			 _log.info("item activated #"+item.toString());
 			return true;
 		}
 		return false;
@@ -226,6 +231,7 @@ public class ItemUtils {
 		{
 			item.setProperty("isActive",0);
 			Utils.put(item);
+			 _log.info("item deactivated #"+item.toString());
 			return true;
 		}
 		return false;
