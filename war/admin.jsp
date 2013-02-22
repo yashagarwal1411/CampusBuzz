@@ -57,6 +57,11 @@
 			</div>
 		
 		</div>
-		
+		<%@include file="chat.jsp"%>	
+		<style>
+			body{
+				overflow: auto;
+			}
+		</style>
 	</body>
 </html>
