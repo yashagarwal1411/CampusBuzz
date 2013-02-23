@@ -76,7 +76,7 @@
 					String msgBody = body.getValue();
 					String date = msg.getProperty("date").toString();
 			%>
-					$("#to").val("<%=to%>");
+					$("#to").val("<%=email%>");
 					$("#subject").val("Re: <%=subject%>");
 					$("#body").html("<br>--<br><%=date%><br><%=msgBody%>");
 					
