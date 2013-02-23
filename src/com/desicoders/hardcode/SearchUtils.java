@@ -43,7 +43,8 @@ public class SearchUtils {
 			//q.addFilter("FTS", FilterOperator.GREATER_THAN_OR_EQUAL, s);
 		//}
 		//
-		q.addFilter("FTS", FilterOperator.IN, queryTokens);
+		if(queryTokens.size()>0)
+			q.addFilter("FTS", FilterOperator.IN, queryTokens);
 		//Filter searchFTS1 = FilterOperator.GREATER_THAN_OR_EQUAL.of("FTS",queryTokens);
 		//Filter searchFTS2 = FilterOperator.LESS_THAN_OR_EQUAL.of("FTS", queryTokensZ);
 		//CompositeFilter filter = CompositeFilterOperator.and(searchFTS1,searchFTS2);
@@ -77,13 +78,13 @@ public class SearchUtils {
      Set<String> new_ftsTokens = SearchFunction.getTokensForIndexingOrQuery(
                      sb.toString(),
                      MAX_NUMBER_OF_WORDS_TO_PUT_IN_INDEX);
-     Set<String> new_ftsTokensForTitle = SearchFunction.getTokensForIndexingOrQuery(
+     /*Set<String> new_ftsTokensForTitle = SearchFunction.getTokensForIndexingOrQuery(
     		 item.getProperty("Title").toString(),
              MAX_NUMBER_OF_WORDS_TO_PUT_IN_INDEX);
      Set<String> new_ftsTokensForDesciption = SearchFunction.getTokensForIndexingOrQuery(
     		 item.getProperty("Description").toString(),
              MAX_NUMBER_OF_WORDS_TO_PUT_IN_INDEX);
-     /*
+     
      Set<String> ftsTokens = new HashSet<String>(); //(Set<String>)item.getProperty("FTS");
 
              ftsTokens.clear();
@@ -94,48 +95,69 @@ public class SearchUtils {
              }              
       */       
              item.setProperty("FTS",new_ftsTokens);
-             item.setProperty("titleFTS", new_ftsTokensForTitle);
-             item.setProperty("descriptionFTS", new_ftsTokensForDesciption);
+            // item.setProperty("titleFTS", new_ftsTokensForTitle);
+             //item.setProperty("descriptionFTS", new_ftsTokensForDesciption);
 }
 	 
 	 
 	 @SuppressWarnings("deprecation")
-	public static List<Entity> advancedSearch(String searchQueryTitle,String searchQueryDescription,String maxPriceLimit,String leastPriceLimit)
+	public static List<Entity> advancedSearch(String searchQuery,String maxPriceLimit,String leastPriceLimit)
 	 {
-		 	Set<String> queryTokensTitle = SearchFunction.getTokensForIndexingOrQuery(searchQueryTitle,MAXIMUM_NUMBER_OF_WORDS_TO_SEARCH);
-		 	Set<String> queryTokensDescription = SearchFunction.getTokensForIndexingOrQuery(searchQueryDescription,MAXIMUM_NUMBER_OF_WORDS_TO_SEARCH);
-		 	float maxPrice=Float.MAX_VALUE,leastPrice = 0;
-		 	try
-			{
-		 		maxPrice = Float.parseFloat(maxPriceLimit);		 		
-			}
-			catch (Exception e) {
-				// TODO: handle exception
-			}
-		 	try
-			{
-		 		leastPrice = Float.parseFloat(leastPriceLimit);
-			}
-			catch (Exception e) {
-				// TODO: handle exception
-			}
-		 	
+		 	//Set<String> queryTokensTitle = SearchFunction.getTokensForIndexingOrQuery(searchQueryTitle,MAXIMUM_NUMBER_OF_WORDS_TO_SEARCH);
+		 	//Set<String> queryTokensDescription = SearchFunction.getTokensForIndexingOrQuery(searchQueryDescription,MAXIMUM_NUMBER_OF_WORDS_TO_SEARCH);
 		 	Query q = new Query("Item");
+		 	float maxPrice=0,leastPrice = 0;
+		 	try
+			{
+		 		if(!maxPriceLimit.equals("") && maxPriceLimit!=null)
+		 		{
+		 			maxPrice = Float.parseFloat(maxPriceLimit);
+			 		q.addFilter("Price", FilterOperator.LESS_THAN_OR_EQUAL, maxPrice);
+		 		}		 		
+			}
+			catch (Exception e) {
+				
+			}
+		 	try
+			{
+		 		if(!leastPriceLimit.equals("") && leastPriceLimit!=null)
+		 		{		 		
+			 		leastPrice = Float.parseFloat(leastPriceLimit);
+			 		q.addFilter("Price", FilterOperator.GREATER_THAN_OR_EQUAL, leastPrice);
+		 		}
+			}
+			catch (Exception e) {
+				
+			}
+		 	Set<String> queryTokens = SearchFunction.getTokensForIndexingOrQuery(searchQuery,MAXIMUM_NUMBER_OF_WORDS_TO_SEARCH);
+		 	
+		 	
 			
-			for(String s:queryTokensTitle)
+			if(queryTokens.size()>0)
+		 		q.addFilter("FTS", FilterOperator.IN, queryTokens);
+		 	
+			/*for(String s:queryTokensTitle)
 			{
 				q.addFilter("titleFTS", FilterOperator.EQUAL, s);				
 			}
 			for(String s:queryTokensDescription)
 			{
 				q.addFilter("descriptionFTS", FilterOperator.EQUAL, s);				
-			}
-			q.addFilter("Price", FilterOperator.LESS_THAN_OR_EQUAL, maxPrice);
-			q.addFilter("Price", FilterOperator.GREATER_THAN_OR_EQUAL, leastPrice);			
+			}*/
+		 	
+						
 			
 			try{		
 			List<Entity> items = Utils.runQuery(q);
-			return items;
+			List<Entity> visibleItems = new ArrayList<Entity>();
+			for(Entity item:items)
+			{
+				if(ItemUtils.areDetailsVisible(item,null))
+				{
+					visibleItems.add(item);
+				}
+			}
+			return visibleItems;
 			}
 			catch(Exception e)
 			{

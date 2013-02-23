@@ -31,8 +31,9 @@ public class DatastoreUtils {
 	
 	public static Key put(Entity newEntity)
 	{
+		boolean shouldLog = !newEntity.getKind().equalsIgnoreCase("status");
 		datastore.put(newEntity);
-		if(!newEntity.getKind().equalsIgnoreCase("status"))
+		if(shouldLog)
 			//we don't want to flood the logs with user's online status
 			_log.info("Entity saved #"+newEntity.toString());
 		return newEntity.getKey();
@@ -95,8 +96,9 @@ public class DatastoreUtils {
     
     public static boolean deleteEntity(Key entityKey)
     {
+    	boolean shouldLog = !Utils.getEntity(entityKey).getKind().equalsIgnoreCase("status");
     	datastore.delete(entityKey);
-    	if(!Utils.getEntity(entityKey).getKind().equalsIgnoreCase("status"))
+    	if(shouldLog)
 			//we don't want to flood the logs with user's online status
     		_log.info("Entity deleted #"+entityKey.toString());
     	return true;//to indicate success

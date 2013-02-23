@@ -24,6 +24,9 @@
 	<%@include file="header.jsp"%>
 	
 		<div class= "container">
+			<div style="float:left">
+			<a href="/advancedSearch.jsp" >Advanced Search</a>
+			</div>
 				<%
 					//setup admin users on empty datastore
 					if(!Utils.ifHardcodeAdminsExists()){
