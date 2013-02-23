@@ -45,6 +45,7 @@
 		
 		<script>
 		function reply(){
+			$('#right-col').html('<p id="page-message">loading...</p>');
 			$("#right-col").load("/compose.jsp?id=<%=id%>");
 		}
 		</script>

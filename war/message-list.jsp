@@ -43,6 +43,7 @@
 		
 		<script>
 			function loadMsg(key){
+				$("#right-col").html('<p id="page-message">loading...</p>');
 				$("#right-col").load("/message.jsp?id="+key);
 			}
 		</script>

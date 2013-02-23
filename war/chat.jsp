@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="com.desicoders.hardcode.Utils"%>
 <%@page import="com.google.appengine.api.datastore.Entity" %>
-<
+
 		<link rel="stylesheet" href="/css/chat-style.css" type="text/css" />
 		<script type="text/javascript" src="/_ah/channel/jsapi"></script>
 		
