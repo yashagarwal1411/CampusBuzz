@@ -13,43 +13,11 @@
 		<script type="text/javascript" src="/js/tiny_mce/rtf.js"></script>
 		<%@include file="iframe-header.jsp"%>
 		
-		<p id="page-message" />
-		
-		<form method="post" action="/message/send">
-		
-		<table class="buzz-text">
-			<tr>
-				<td>To :</td>
-				<td><input type="text" name="to" id="to" placeholder="separate emails by ;" /></td>
-			</tr>
-			<tr>
-				<td>Subject :</td>
-				<td><input type="text" name="subject" id="subject"  / > </td>
-				
-			</tr>
-			
-		</table>
-		<p class="buzz-text">Message :</p>
-		<textarea name="body" id="body"></textarea>  <br>
-		<input type="submit" class="button" value ="send"/>
-		
-		</form>
-		
-		<script>
-			if(getQueryStringParam("sent")=="true"){
-				$("#page-message").html("Message sent !!");
-			}else if((getQueryStringParam("sent")=="false")){
-				$("#page-message").html("Failed to send Message !!");
-			}
-			
-			$("#to").val(getQueryStringParam("to"));
-			if(getQueryStringParam("title")!=null)
-				$("#subject").val("In reference to your item '"+getQueryStringParam("title")+"' priced "+getQueryStringParam("price")+"$");
-			
-			
-			//fill in message form if it's a reply message
-			<%
+		<%
 				String id = request.getParameter("id");
+				String email="";
+				String msgBody="";
+				String subject="";
 				if(id!=null && !id.equals("")){
 					Entity user = Utils.getUserFromSession(request);
 					if(user==null){
@@ -62,7 +30,7 @@
 					String to = (String) msg.getProperty("to");
 					String from = (String) msg.getProperty("from");
 					String userEmail = (String) user.getProperty("Email");
-					String email=null;
+					
 					if(userEmail.equalsIgnoreCase(to)){
 						email = from;
 					}else if(userEmail.equalsIgnoreCase(from)){
@@ -71,16 +39,55 @@
 						return;
 					}
 					
-					String subject = (String) msg.getProperty("subject");
+					subject = (String) msg.getProperty("subject");
 					Text body = (Text) msg.getProperty("body");
-					String msgBody = body.getValue();
+					msgBody = body.getValue();
 					String date = msg.getProperty("date").toString();
-			%>
-					$("#to").val("<%=email%>");
-					$("#subject").val("Re: <%=subject%>");
-					$("#body").html('<br>--<br><%=date%><br><%=msgBody%>');
+					msgBody = "--<br>"+date +"<br>"+msgBody;
 					
-			<% } %>
+				}
+				
+				
+	
+			%>
+				
+			
+			
+		<p id="page-message" />
+		
+		<form method="post" action="/message/send">
+		
+		<table class="buzz-text">
+			<tr>
+				<td>To :</td>
+				<td><input type="text" name="to" id="to" placeholder="separate emails by ;"  value="<%=email%>" /></td>
+			</tr>
+			<tr>
+				<td>Subject :</td>
+				<td><input type="text" name="subject" id="subject" value="<%=subject%>" / > </td>
+				
+			</tr>
+			
+		</table>
+		<p class="buzz-text">Message :</p>
+		<textarea name="body" id="body"><%=msgBody%></textarea>  <br>
+		<input type="submit" class="button" value ="send"/>
+		
+		</form>
+		
+		<script>
+			if(getQueryStringParam("sent")=="true"){
+				$("#page-message").html("Message sent !!");
+			}else if((getQueryStringParam("sent")=="false")){
+				$("#page-message").html("Failed to send Message !!");
+			}
+			
+			if(getQueryStringParam("to")!=null)
+				$("#to").val(getQueryStringParam("to"));
+			
+			if(getQueryStringParam("title")!=null)
+				$("#subject").val("In reference to your item '"+getQueryStringParam("title")+"' priced "+getQueryStringParam("price")+"$");
+			
 		</script>
 	</body>
 </html>
