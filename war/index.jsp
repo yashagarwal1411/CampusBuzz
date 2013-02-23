@@ -24,7 +24,7 @@
 	<%@include file="header.jsp"%>
 	
 		<div class= "container">
-			<div style="float:left">
+			<div>
 			<a href="/advancedSearch.jsp" >Advanced Search</a>
 			</div>
 				<%
