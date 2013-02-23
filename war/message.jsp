@@ -1,4 +1,5 @@
 <%@page import="com.google.appengine.api.datastore.KeyFactory"%>
+<%@page import="com.google.appengine.api.datastore.Text"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="com.desicoders.hardcode.Utils"%>
 <%@page import="com.google.appengine.api.datastore.Entity" %>
@@ -20,23 +21,32 @@
 			String from = (String) msg.getProperty("from");
 			String userEmail = (String) user.getProperty("Email");
 			if(userEmail.equalsIgnoreCase(to)){
-				out.print("<p class='buzz-text'>From : "+from+"</p>");
+				out.print("<div class='buzz-text'>From : "+from+"");
 			}else if(userEmail.equalsIgnoreCase(from)){
-				out.print("<p class='buzz-text'>To : "+to+"</p>");
+				out.print("<div class='buzz-text'>To : "+to+"");
 			}else{
 				out.print("<p id='page-message'>You are not authorised to view this message !! </p>");
 				return;
 			}
+			
 			String subject = (String) msg.getProperty("subject");
-			String body = (String) msg.getProperty("body");
-			String date = (String) msg.getProperty("date");
+			Text body = (Text) msg.getProperty("body");
+			String msgBody = body.getValue();
+			String date = msg.getProperty("date").toString();
 		%>
-		
+		<a onClick='reply()' class="button" style="float:right">Reply</a>
+		</div>
 		<p class="buzz-text">Subject :</p>
 		<%=subject %>
 		<p class="buzz-text">Message :</p>
-		<%=body %>
+		<%=msgBody %>
 		<p class="buzz-text">Time :</p>
 		<%=date %>
+		
+		<script>
+		function reply(){
+			$("#right-col").load("/compose.jsp?id=<%=id%>");
+		}
+		</script>
 	</body>
 </html>

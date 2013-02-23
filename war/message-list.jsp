@@ -99,14 +99,14 @@
 				if(subject.length()>30)
 					subject = subject.substring(0,30)+"...";
 				
-				String date = (String) e.getProperty("date");
+				String date =e.getProperty("date").toString();
 				
 				
 				
 		%>
 			<script type="text/javascript">
 				var row = "<tr onClick=\x22loadMsg('<%=key%>')\x22><td class='email'><%=email%></td><td class='sub'><%=subject%></td><td class='date'><%=date%></td></tr>";
-				$(row).appendTo("#message-tabel tbody")
+				$(row).appendTo("#message-tabel tbody");
 			</script>
 		 <%	}	%>
 		

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Text;
 
 @SuppressWarnings("serial")
 public class MessageServlet extends HttpServlet{
@@ -18,25 +19,31 @@ public class MessageServlet extends HttpServlet{
 		
 		String action = Utils.getActionFromUrl(req);
 		if(action.equalsIgnoreCase("send")){
-			String to = req.getParameter("to");
-			String[] toEmails = to.split(";");
-			String from = (String) Utils.getUserFromSession(req).getProperty("Email");
-			String subject = req.getParameter("subject");
-			String body = req.getParameter("body");
-		
-			for(String s: toEmails){
-				s= s.trim();
-				Entity message = Utils.createEntity("Message");
-				message.setProperty("to",s);
-				message.setProperty("from",from);
-				message.setProperty("subject",subject);
-				message.setProperty("body",body);
-				message.setProperty("date", new Date());
-				
-				Utils.put(message);
-				_log.info("message saved #"+message.toString());
+			try{
+				String to = req.getParameter("to");
+				String[] toEmails = to.split(";");
+				String from = (String) Utils.getUserFromSession(req).getProperty("Email");
+				String subject = req.getParameter("subject");
+				String body = req.getParameter("body");
+				Text msgBody = new Text(body);
+				for(String s: toEmails){
+					s= s.trim();
+					Entity message = Utils.createEntity("Message");
+					message.setProperty("to",s);
+					message.setProperty("from",from);
+					message.setProperty("subject",subject);
+					message.setProperty("body",msgBody);
+					message.setProperty("date", new Date());
+					
+					Utils.put(message);
+					_log.info("message saved #"+message.toString());
+					resp.sendRedirect("/profile.jsp?url=compose.jsp&sent=true");
+				}
+			}catch (Exception e) {
+					resp.sendRedirect("/profile.jsp?url=compose.jsp&sent=false");
 			}
-			resp.sendRedirect("/profile.jsp?url=compose.jsp&sent=true");
+			
+			
 			return;
 		}
 		
