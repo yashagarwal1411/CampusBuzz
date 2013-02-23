@@ -78,7 +78,7 @@
 			%>
 					$("#to").val("<%=email%>");
 					$("#subject").val("Re: <%=subject%>");
-					$("#body").html("<br>--<br><%=date%><br><%=msgBody%>");
+					$("#body").html('<br>--<br><%=date%><br><%=msgBody%>');
 					
 			<% } %>
 		</script>
