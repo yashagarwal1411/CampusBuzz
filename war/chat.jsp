@@ -9,6 +9,7 @@
 
 		function sendMsg(id){
 			$.post('/chat', {msg:$("#"+id+" .chatbox").val(),remote:id});
+			$("#"+id+" .chatboard").scrollTop($("#"+id+" .chatboard")[0].scrollHeight);
 		}
 
 		//wrappers to pass to channel socket
@@ -24,7 +25,9 @@
 				createChat(id);
 			}
 			$("#"+id+" .chatboard").html($("#"+id+" .chatboard").html()+$("#"+id+" .remoteName").html()+': '+data+'<br><br>');
+			$("#"+id+" .chatboard").scrollTop($("#"+id+" .chatboard")[0].scrollHeight);
 		};
+		
 		onError = function(error){
 			//alert(error.description+error.code);
 			//remove the annoying alert and behave peacefully ,like, disable chat box
