@@ -1,9 +1,11 @@
+<%@page import="com.desicoders.hardcode.JsonUtils"%>
 <%@page import="com.desicoders.hardcode.ItemUtils"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="com.desicoders.hardcode.Utils"%>
 <%@page import="com.desicoders.hardcode.SearchUtils"%>
 <%@page import="com.google.appengine.api.datastore.Entity" %>
 <%@page import="java.util.List" %>
+<%@page import="org.json.*" %>
 
 <html>
 	<head>
@@ -62,6 +64,23 @@
 					}
 					%>
 					<%@include file="item-object.txt"%>
+					
+				<%
+				    if(!request.getParameter("searchQuery").equalsIgnoreCase(""))
+				    {
+					String[] compatibleApps = {"http://astudyhall.appspot.com/"};
+					for(int i=0;i<compatibleApps.length;i++)
+					{
+						compatibleApps[i] = compatibleApps[i] + "webservices/search?query='" + request.getParameter("searchQuery")+"'";
+						JSONObject json = JsonUtils.readJsonFromUrl(compatibleApps[i]);
+						%>
+						
+						<%						
+					}
+				    }
+				%>
+					
+					
 			</div>
 			<%@include file="chat.jsp"%>	
 		<style>
