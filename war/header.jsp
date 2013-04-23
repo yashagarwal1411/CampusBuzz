@@ -100,6 +100,7 @@
 			<form action="/" method="get" class="form-wrapper cf">
 				<%
 					String str = ""+request.getParameter("searchQuery");
+					str = Utils.getSafeHtml(str);
 					if(str.equals("")) str="null";
 				%>
 				<input type="text" name="searchQuery" <% if(str.equals("null")) out.print("placeholder='Search here...' required"); else out.print("value='"+str+"' ");%> />			

@@ -28,8 +28,11 @@
 					if(msg ==null)
 						return;
 					String to = (String) msg.getProperty("to");
+					to = Utils.getSafeHtml(to);
 					String from = (String) msg.getProperty("from");
+					from = Utils.getSafeHtml(from);
 					String userEmail = (String) user.getProperty("Email");
+					userEmail = Utils.getSafeHtml(userEmail);
 					
 					if(userEmail.equalsIgnoreCase(to)){
 						email = from;
@@ -40,9 +43,12 @@
 					}
 					
 					subject = (String) msg.getProperty("subject");
+					subject = Utils.getSafeHtml(subject);
 					Text body = (Text) msg.getProperty("body");
 					msgBody = body.getValue();
+					msgBody = Utils.getSafeHtml(msgBody);
 					String date = msg.getProperty("date").toString();
+					date = Utils.getSafeHtml(date);
 					msgBody = "--<br>"+date +"<br>"+msgBody;
 					
 				}

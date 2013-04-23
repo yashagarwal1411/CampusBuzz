@@ -20,11 +20,11 @@ public class MessageServlet extends HttpServlet{
 		String action = Utils.getActionFromUrl(req);
 		if(action.equalsIgnoreCase("send")){
 			try{
-				String to = req.getParameter("to");
+				String to = Utils.getSafeHtml(req.getParameter("to"));
 				String[] toEmails = to.split(";");
 				String from = (String) Utils.getUserFromSession(req).getProperty("Email");
-				String subject = req.getParameter("subject");
-				String body = req.getParameter("body");
+				String subject = Utils.getSafeHtml(req.getParameter("subject"));
+				String body = Utils.getSafeHtml(req.getParameter("body"));
 				Text msgBody = new Text(body);
 				for(String s: toEmails){
 					s= s.trim();

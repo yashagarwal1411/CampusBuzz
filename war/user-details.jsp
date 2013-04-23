@@ -43,20 +43,21 @@
 		//Entity owner = 	Utils.getEntity((Key)item.getProperty("OwnerKey"));
 		 String userKey = KeyFactory.keyToString(user.getKey());
 		String userEmail =(String) user.getProperty("Email");
+		userEmail = Utils.getSafeHtml(userEmail);
 		Long userId = user.getKey().getId();
 		%>
 		<div id="wrapper">	
 		<div id="main-content">
 			<div id="left-column">
 				<div id="title">
-				<%= user.getProperty("fname")+" "+user.getProperty("lname") %>
+				<%= Utils.getSafeHtml(user.getProperty("fname").toString())+" "+Utils.getSafeHtml(user.getProperty("lname").toString()) %>
 				</div>
 			<div class="box">
-        		<h1>Email : <%= user.getProperty("Email") %></h1>          		   		
+        		<h1>Email : <%= Utils.getSafeHtml(user.getProperty("Email").toString()) %></h1>          		   		
 			</div>
 			<h2>DESCRIPTION</h2>
 			<div class="item-desc">
-				<%= user.getProperty("Description") %>
+				<%= Utils.getSafeHtml(user.getProperty("Description").toString()) %>
 			</div>
 			</div>
 		<div id="right-column">

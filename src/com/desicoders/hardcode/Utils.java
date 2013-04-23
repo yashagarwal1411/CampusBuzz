@@ -16,6 +16,9 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
+
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
@@ -129,5 +132,17 @@ public class Utils extends DatastoreUtils{
 	static public String getLoginUrl(HttpServletRequest req){
 		 UserService userService = UserServiceFactory.getUserService();
 		 return userService.createLoginURL("/users/googlelogin");
+	}
+	
+	/**
+	 * prevent cross site forgery
+	 * 
+	 * @param untrustedHTML
+	 * @return
+	 */
+	public static String getSafeHtml(String untrustedHTML){
+		PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+		String safeHTML = policy.sanitize(untrustedHTML);
+		return safeHTML;
 	}
 }

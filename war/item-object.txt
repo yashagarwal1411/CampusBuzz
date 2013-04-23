@@ -20,19 +20,20 @@
 							imgSrc = "/css/images/noimageavailable.jpg";
 						}
 						%>
-						<img src="<%=imgSrc %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="100" height="120" />
+						<img src="<%=Utils.getSafeHtml(imgSrc) %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="100" height="120" />
 						<br />
 						</div>
 						<div class="itemTitle" >
-						<%=item.getProperty("Title")%><br />
+						<%=Utils.getSafeHtml(item.getProperty("Title").toString())%><br />
 						</div>
 						<div class="itemPrice" >
-						Price : <%=item.getProperty("Price")%> $<br />
+						Price : <%=Utils.getSafeHtml(""+item.getProperty("Price"))%> $<br />
 						</div>
 						<div class="itemDescription" >
 						
 						<%
-						String description = item.getProperty("Description").toString();
+						String description = Utils.getSafeHtml(item.getProperty("Description").toString());
+						
 						if(description.length()>50)
 							out.println(description.subSequence(0, 30)+"....");
 						else

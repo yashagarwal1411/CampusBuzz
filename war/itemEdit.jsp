@@ -55,18 +55,18 @@
 			</tr>
 			<tr>
 				<td>Title :</td>
-				<td><input type="text" name="title" value="<%=item.getProperty("Title") %>" /></td>
+				<td><input type="text" name="title" value="<%=Utils.getSafeHtml(item.getProperty("Title").toString()) %>" /></td>
 			</tr>
 			<tr>
 				<td>Description :</td>			
 			</tr>
 			<tr>
 			<td></td>
-			<td><textarea rows="15" cols="80" style="width: 80%" name="description" ><%=item.getProperty("Description") %></textarea></td>
+			<td><textarea rows="15" cols="80" style="width: 80%" name="description" ><%=Utils.getSafeHtml(item.getProperty("Description").toString()) %></textarea></td>
 			</tr>
 			<tr>
 				<td>Price :</td>
-				<td><input id="price" type="text"  name="price"  value="<%=item.getProperty("Price")%>"/> $</td> 
+				<td><input id="price" type="text"  name="price"  value="<%=Utils.getSafeHtml(""+item.getProperty("Price"))%>"/> $</td> 
 			</tr>
 			<tr>	
 				<td>Active :</td>

@@ -44,28 +44,31 @@
 		String ownerId = KeyFactory.keyToString(owner.getKey());
 		String ownerEmail =(String) owner.getProperty("Email");
 		Long itemId = item.getKey().getId();
+		String safeItemID = Utils.getSafeHtml(""+itemId);
+		itemId = Long.parseLong(safeItemID); 
+				
 		%>
 		<div id="wrapper">	
 		<div id="main-content">
 			<div id="left-column">
 				<div id="title">
-				<%= item.getProperty("Title") %>
+				<%= Utils.getSafeHtml(item.getProperty("Title").toString()) %>
 				</div>
 			<div class="box">
-        		<h1>PRICE : <%= item.getProperty("Price") %> $</h1>  
+        		<h1>PRICE : <%=Utils.getSafeHtml( ""+item.getProperty("Price")) %> $</h1>  
         		<ul style="margin-top:10px;">
-					<li><a href="/users/details/<%=owner.getKey().getId()%>" style='text-decoration:none'>OWNER : <% out.print(owner.getProperty("fname")+" "+owner.getProperty("lname")); %></a></li>
-					<li>CREATION TIME : <%= item.getProperty("CreationTime") %></li>
-					<li>EXPIRATION TIME : <%= item.getProperty("ExpirationTime") %></li>
+					<li><a href="/users/details/<%=owner.getKey().getId()%>" style='text-decoration:none'>OWNER : <% out.print(Utils.getSafeHtml(owner.getProperty("fname").toString())+" "+Utils.getSafeHtml(owner.getProperty("lname").toString())); %></a></li>
+					<li>CREATION TIME : <%= Utils.getSafeHtml(item.getProperty("CreationTime").toString()) %></li>
+					<li>EXPIRATION TIME : <%= Utils.getSafeHtml(item.getProperty("ExpirationTime").toString()) %></li>
 				</ul>      		
 			</div>
 			<h2>DESCRIPTION</h2>
 			<div class="item-desc">
-				<%= item.getProperty("Description") %>
+				<%= Utils.getSafeHtml(item.getProperty("Description").toString()) %>
 			</div>
 			</div>
 		<div id="right-column">
-			<div id="main-image"><img src="/items/pic/<%=itemId %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="160" height="188" /></div>
+			<div id="main-image"><img src="/items/pic/<%=Utils.getSafeHtml(""+itemId) %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="160" height="188" /></div>
 			<div class="sidebar">
 					<br><br>
 				<div class="box">
@@ -77,7 +80,7 @@
 						<%}else{%>
 							<li><button class="button">Seller Offline</button></li>
 						<%	} %>
-							<li><a class="button" href="/profile.jsp?url=compose.jsp&to=<%=ownerEmail %>&title=<%= item.getProperty("Title") %>&price=<%= item.getProperty("Price") %>">Send Message</a></li>
+							<li><a class="button" href="/profile.jsp?url=compose.jsp&to=<%=ownerEmail %>&title=<%= Utils.getSafeHtml(item.getProperty("Title").toString()) %>&price=<%= Utils.getSafeHtml(item.getProperty("Price").toString() )%>">Send Message</a></li>
 						<%}	
 						
 									

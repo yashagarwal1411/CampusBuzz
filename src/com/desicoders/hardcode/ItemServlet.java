@@ -62,11 +62,11 @@ public class ItemServlet extends HttpServlet{
 	        	blobKey = null;
 	        }
 						
-	        title = req.getParameter("title");
-			description = req.getParameter("description");
+	        title = Utils.getSafeHtml(req.getParameter("title").toString());
+			description = Utils.getSafeHtml(req.getParameter("description").toString());
 			try
 			{
-				price = Float.parseFloat(req.getParameter("price"));
+				price = Float.parseFloat(Utils.getSafeHtml(req.getParameter("price")));
 			}
 			catch (Exception e) {
 				
@@ -82,11 +82,11 @@ public class ItemServlet extends HttpServlet{
 		if(action.equalsIgnoreCase("editsubmit"))
 		{
 						
-			title = req.getParameter("title");
-			description = req.getParameter("description");
+			title = Utils.getSafeHtml(req.getParameter("title").toString());
+			description = Utils.getSafeHtml(req.getParameter("description").toString());
 			try
 			{
-				price = Float.parseFloat(req.getParameter("price"));
+				price = Float.parseFloat(Utils.getSafeHtml(req.getParameter("price")));
 			}
 			catch (Exception e) {
 				

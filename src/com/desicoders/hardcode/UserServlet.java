@@ -263,9 +263,9 @@ public class UserServlet extends HttpServlet {
 
 		if (action.equalsIgnoreCase("edit")) {
 			Entity user = Utils.getUserFromSession(req);
-			user.setProperty("fname", req.getParameter("fname"));
-			user.setProperty("lname", req.getParameter("lname"));
-			user.setProperty("Description", req.getParameter("description"));
+			user.setProperty("fname", Utils.getSafeHtml(req.getParameter("fname").toString()));
+			user.setProperty("lname", Utils.getSafeHtml(req.getParameter("lname").toString()));
+			user.setProperty("Description", Utils.getSafeHtml(req.getParameter("description").toString()));
 			BlobKey blobKey = null;
 			@SuppressWarnings("deprecation")
 			Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
@@ -294,7 +294,7 @@ public class UserServlet extends HttpServlet {
 		}
 
 		if (action.equalsIgnoreCase("signup")) {
-			String email = req.getParameter("email");
+			String email = Utils.getSafeHtml(req.getParameter("email").toString());
 			String password = req.getParameter("password");
 			try {
 				Entity user = Utils.createEntity("User");
