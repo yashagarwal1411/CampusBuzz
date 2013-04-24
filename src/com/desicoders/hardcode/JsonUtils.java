@@ -63,6 +63,51 @@ public class JsonUtils {
 			     return responseString;
 
 		  }
+
+		  public static String getPlainFromUrl(String url) throws IOException{
+
+			  URL mUrl = new URL(url);
+			  URLConnection conn = mUrl.openConnection();
+			  InputStream is = conn.getInputStream() ;
+			  BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			  StringBuffer sb = new StringBuffer();
+			  String str = br.readLine();
+			  while(str != null){
+			  sb.append(str);
+			  str = br.readLine();
+			  }
+			  br.close();
+			  String responseString = sb.toString();
+			  return responseString;
+			  }
+
+			  public static JSONObject getJsonFromUrl(String url) throws IOException, JSONException {
+
+			  JSONObject json = new JSONObject(getPlainFromUrl(url));
+			  return json;
+
+			  }
+
+
+		public static Map<String, String> parseSearchSuggestionsFromDomain(String query, String appId) throws IOException, JSONException {
+			String url = appId+"webservices/search_suggestions?query=" + query;
+			JSONObject json = JsonUtils.getJsonFromUrl(url);
+			Map<String,String> suggestions = new HashMap<String, String>();
+			if(json.getBoolean("success") == false)
+			{
+				return suggestions;
+			}
+			JSONArray itemsForeign = json.getJSONArray("items");
+			for (int idx = 0; idx < itemsForeign.length(); idx++)
+			{ 
+				JSONObject item = itemsForeign.getJSONObject(idx);
+				if(item.has("itemId"))
+					suggestions.put(item.getString("itemId"), item.getString("fullString"));
+				else
+					suggestions.put(idx+" N/A", item.getString("fullString"));
+			}	
+			return suggestions;
+		}
 		  
 		  public static String getPlainFromUrl(String url) throws IOException{
 			  

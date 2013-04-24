@@ -128,7 +128,12 @@
 		 
 			
 		<%@include file="chat.jsp"%>
-		<script>var itemrating=<%=Math.round(Double.parseDouble(item.getProperty("Rating").toString()))%></script>	
+		<%
+			long rating = 0;
+			if(item.hasProperty("Rating"))
+				rating = Math.round(Double.parseDouble(item.getProperty("Rating").toString()));
+		%>	
+		<script>var itemrating=<%=rating%></script>	
 		<script>
 		$(document).ready(function() {	
 			  $('#example-2').ratings(5,itemrating).bind('ratingchanged', function(event, data) {

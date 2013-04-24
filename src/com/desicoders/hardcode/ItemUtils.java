@@ -123,7 +123,7 @@ public class ItemUtils {
 		 Date creationDate = new Date();
 		 Calendar calendar = new GregorianCalendar();
 		 calendar.setTime(creationDate);
-		 calendar.add(Calendar.DATE, 30); //HERE I AM ADDING 30 DAYS FOR EXPIRATION , CHANGE IT LATER
+		 calendar.add(Calendar.DATE, 30); //HERE I AM ADDING 30 DAYS FOR EXPIRATION 
 		 Date expirationDate = calendar.getTime();
 		 Set<String> ftsTokens = new HashSet<String>();
 		 Entity item = Utils.createEntity("Item");

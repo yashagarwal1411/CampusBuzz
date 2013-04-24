@@ -9,7 +9,7 @@
 <html>
 	<head>
 		<link href="/css/item.css" rel="stylesheet" type="text/css" />
-		
+		<link type="text/css" rel="stylesheet" href="/css/jquery.ratings.css" />
 		
 	</head>
 	<body>
@@ -41,7 +41,7 @@
 		<%
 		Entity user= (Entity)request.getAttribute("User");
 		//Entity owner = 	Utils.getEntity((Key)item.getProperty("OwnerKey"));
-		 String userKey = KeyFactory.keyToString(user.getKey());
+		String userKey = KeyFactory.keyToString(user.getKey());
 		String userEmail =(String) user.getProperty("Email");
 		userEmail = Utils.getSafeHtml(userEmail);
 		Long userId = user.getKey().getId();
@@ -53,7 +53,9 @@
 				<%= Utils.getSafeHtml(user.getProperty("fname").toString())+" "+Utils.getSafeHtml(user.getProperty("lname").toString()) %>
 				</div>
 			<div class="box">
-        		<h1>Email : <%= Utils.getSafeHtml(user.getProperty("Email").toString()) %></h1>          		   		
+        		<h1>Email : <%= Utils.getSafeHtml(user.getProperty("Email").toString()) %></h1>  
+        		<div id="example-2"></div> <br />
+    			Your Rating: <span id="example-rating-2">not set</span>        		   		
 			</div>
 			<h2>DESCRIPTION</h2>
 			<div class="item-desc">
@@ -102,7 +104,22 @@
 		</div>
 		</div>
 			
-			<%@include file="chat.jsp"%>	
+			<%@include file="chat.jsp"%>
+			<%
+			long rating = 0;
+			if(user.hasProperty("Rating"))
+				rating = Math.round(Double.parseDouble(user.getProperty("Rating").toString()));
+			%>	
+			<script>var itemrating=<%=rating%></script>	
+		<script>
+		$(document).ready(function() {	
+			  $('#example-2').ratings(5,itemrating).bind('ratingchanged', function(event, data) {
+			    $('#example-rating-2').text(data.rating);
+			    $.get("/users/addrating"+data.rating+"/<%=userId%>");
+			  });
+			});
+		</script>
+    	<script src="/js/jquery.ratings.js"></script>
 		<style>
 			body{
 				overflow: auto;

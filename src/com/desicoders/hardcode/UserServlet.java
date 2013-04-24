@@ -16,9 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -293,7 +290,41 @@ public class UserServlet extends HttpServlet {
 //			} catch (Exception e) {
 //				resp.getWriter().print("failed");
 //			}
-			
+		}
+		if(action.equalsIgnoreCase("addrating1"))
+		{
+			Long userId = Long.parseLong(Utils.getActionFromUrl(req, 5));
+			Entity user = DatastoreUtils.getEntityFromId(userId,"User");
+			UserUtils.addRating(user, 1.0);
+			return;
+		}
+		if(action.equalsIgnoreCase("addrating2"))
+		{
+			Long userId = Long.parseLong(Utils.getActionFromUrl(req, 5));
+			Entity user = DatastoreUtils.getEntityFromId(userId,"User");
+			UserUtils.addRating(user, 2.0);
+			return;
+		}
+		if(action.equalsIgnoreCase("addrating3"))
+		{
+			Long userId = Long.parseLong(Utils.getActionFromUrl(req, 5));
+			Entity user = DatastoreUtils.getEntityFromId(userId,"User");
+			UserUtils.addRating(user, 3.0);
+			return;
+		}
+		if(action.equalsIgnoreCase("addrating4"))
+		{
+			Long userId = Long.parseLong(Utils.getActionFromUrl(req, 5));
+			Entity user = DatastoreUtils.getEntityFromId(userId,"User");
+			UserUtils.addRating(user, 4.0);
+			return;
+		}
+		if(action.equalsIgnoreCase("addrating5"))
+		{
+			Long userId = Long.parseLong(Utils.getActionFromUrl(req, 5));
+			Entity user = DatastoreUtils.getEntityFromId(userId,"User");
+			UserUtils.addRating(user, 5.0);
+			return;
 		}
 	}
 	
