@@ -1,3 +1,8 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page import="com.desicoders.hardcode.Utils"%>
+<%@page import="java.util.List" %>
+<%@page import="com.google.appengine.api.datastore.Entity" %>
+
 <html>
 	<head>
 		<%@include file="iframe-header.jsp"%>
@@ -6,53 +11,33 @@
 	<body>
 	<p id="page-message"></p>	
 	
-	 <form method="post" action="/users/changepassword">	
-		<table class="buzz-text">
-			<tr>
-				<td>Old password :</td>
-				<td><input type="password" name="oldpassword" id="oldpassword"/></td>
-			</tr>
-			<tr>
-				<td>New Password :</td>
-				<td><input type="password" name="password" id="password" /></td>
-				
-			</tr>
-			<tr>
-				<td>Confirm Password :</td>
-				<td><input type="password" name="confirmpassword" id="confirmpassword" /></td>
-			</tr>
-			<tr>
-				
-			</tr>
-		</table>
+	 <form method="post" action="/users/export">	
+		Please select a site where you want to export your  account :<br><br>
+		Please note this will delete your account from this site
 		
-		<br>
-		<input type="button" class="button" value="Change" style="margin-left:20px" onClick='changePasswd()'/>
+		<br><br>
+		<select id="apps">
+			<%
+				List<Entity> apps = Utils.getEntity("ExternalApp");
+			    String opts="";
+			    for(Entity app : apps){
+			    	String id= (String) app.getProperty("appId");
+			    	opts += "<option value='"+id+"'>"+id+"</option>";
+			     }
+			%>
+			<%=opts %>
+		</select><br><br>
+		<input type="button" class="button" value="Export" style="margin-left:20px" onClick='exportMe()'/>
 		
 		
 	 </form>	
-	 <p >
-	 If you have logged in via google , then you can not change your password from here.
-	 </p>
+	 
 	 <script>
-			function changePasswd(){
-				$("#page-message").html("");
-				var passwd = $("#password").val();
-				var confPasswd = $("#confirmpassword").val();
-				if(passwd!=confPasswd)
-					$("#page-message").html("New password does not match confirm password !!");
-				else{
-					$("form").submit();
-				}
+			function exportMe(){
+				
+				$("form").attr("action","/users/export?appId="+$('#apps').val());
+				$("form").submit();
 			}
-			
-			var qString = location.search;
-		
-			if(qString.indexOf("wrongpassword")!=-1)
-				$("#page-message").html("Password incorrect !!");
-			else if(qString.indexOf("successPwd")!=-1)
-				$("#page-message").html("password changed !!");
-			
 			
 	 </script>
 	</body>

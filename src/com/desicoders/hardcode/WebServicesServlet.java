@@ -78,6 +78,22 @@ public class WebServicesServlet extends HttpServlet{
 			 resp.getWriter().print(json); //send json here
 			 return;
 		}
+		
+		if(action.equalsIgnoreCase("new_item")){
+			String json = "{"
+								+"\"success\" : \"false\""
+								+"\"message\": \"Not Currently implementing this :(\""
+							+"}";
+			resp.setContentType("application/json");
+			resp.getWriter().print(json);
+			return;
+		}
+		
+		if(action.equalsIgnoreCase("user_import")){
+			//get json and create user along with items
+			
+		}
+		
 		return;
 		
 	}
@@ -274,6 +290,8 @@ public class WebServicesServlet extends HttpServlet{
 		
 
  	}
+	
+	
 		
 }
 

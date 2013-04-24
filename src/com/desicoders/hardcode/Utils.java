@@ -179,19 +179,55 @@ public class Utils extends DatastoreUtils{
 		Entity user = getUserFromSession(req);
 		String json;
 		json = "{"
-				+"\"Email\" : \""+(String)user.getProperty("Email")+"\""
-				+"\"fname\" : \""+(String)user.getProperty("fname")+"\""
-				+"\"lname\" : \""+(String)user.getProperty("lname")+"\""
-				+"\"Description\" : \""+(String)user.getProperty("Description")+"\""
-				+"\"imageUrl\" : \""+(String)user.getProperty("PicBlobKey")+"\""
-			    ;
-			+	items:
-				[{
-					item_id: STRING
-					... (specified before)
-				}]
-			}   
+				+"\"profile\":"
+				+"{"
+					+"\"Email\" : \""+(String)user.getProperty("Email")+"\","
+					+"\"fname\" : \""+(String)user.getProperty("fname")+"\","
+					+"\"lname\" : \""+(String)user.getProperty("lname")+"\","
+					+"\"Description\" : \""+(String)user.getProperty("Description")+"\","
+					+"\"image\" : \""+ req.getServerName()+"/users/pic/"+user.getKey().getId() +"\","
+				+"},"
+			    
+				+"\"items\":"
+				+"[";
+				
+		
+		
+			List<Entity> items = ItemUtils.listPostedItems(user);
+			for(Entity item : items){
+				
+				json+=getJSONforItem(item, req)+",";
+			}
+			json = json.substring(0, json.length()-1);
+			json+="]}" ;
 
 		return json;
+	}
+	
+	public static String getJSONforItem(Entity item,HttpServletRequest req)
+	{
+		Entity owner = DatastoreUtils.getEntity((Key)item.getProperty("OwnerKey"));
+		String json ="";
+		json += "{ \"title\":\""+item.getProperty("Title")+"\","
+		+ "\"description\":\""+item.getProperty("Description")+"\","
+		+ "\"seller\" : [{"
+		+ " \"username\" : \" "+item.getProperty(owner.getProperty("fname")+" "+owner.getProperty("lname"))+"\","
+		+ " \"id\" : \" "+ owner.getKey().getId()+"\""
+		+ "}],"
+		+ "\"price\" : \""+item.getProperty("Price")+"\","
+		+ "\"image\" : \""+ req.getServerName()+"/items/pic/"+item.getKey().getId() +"\","
+		+ "\"url\" : \""+req.getServerName()+"/items/details/"+item.getKey().getId()+"\""
+		+ "}";
+		return json;
+	}
+
+	
+	public static String getAuthToken(String appId){
+		Filter appFilter = FilterOperator.EQUAL.of("appId",appId);
+		Query q = new Query("ExternalApp").setFilter(appFilter);
+		List<Entity> apps = Utils.runQuery(q);
+		if(apps.size()==0)
+			return null;
+		return (String)apps.get(0).getProperty("token");
 	}
 }
