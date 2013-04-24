@@ -9,14 +9,15 @@
 <html>
 	<head>
 		<link href="/css/item.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="/css/jquery.ratings.css" />
 		
+    	
+    	
 		
 	</head>
 	<body>
 		<%@include file="/header.jsp"%>
 		<div class="container">
-		
-		
 		
 		<style>
 			body{
@@ -55,7 +56,9 @@
 				<%= Utils.getSafeHtml(item.getProperty("Title").toString()) %>
 				</div>
 			<div class="box">
-        		<h1>PRICE : <%=Utils.getSafeHtml( ""+item.getProperty("Price")) %> $</h1>  
+        		<h1>PRICE : <%=Utils.getSafeHtml( ""+item.getProperty("Price")) %> $     </h1>        		
+        		<div id="example-2"></div> <br />
+    			Your Rating: <span id="example-rating-2">not set</span> 
         		<ul style="margin-top:10px;">
 					<li><a href="/users/details/<%=owner.getKey().getId()%>" style='text-decoration:none'>OWNER : <% out.print(Utils.getSafeHtml(owner.getProperty("fname").toString())+" "+Utils.getSafeHtml(owner.getProperty("lname").toString())); %></a></li>
 					<li>CREATION TIME : <%= Utils.getSafeHtml(item.getProperty("CreationTime").toString()) %></li>
@@ -122,8 +125,19 @@
 		</div>
 		</div>
 		</div>
+		 
 			
-			<%@include file="chat.jsp"%>	
+		<%@include file="chat.jsp"%>
+		<script>var itemrating=<%=Math.round(Double.parseDouble(item.getProperty("Rating").toString()))%></script>	
+		<script>
+		$(document).ready(function() {	
+			  $('#example-2').ratings(5,itemrating).bind('ratingchanged', function(event, data) {
+			    $('#example-rating-2').text(data.rating);
+			    $.get("/items/addrating"+data.rating+"/<%=itemId%>");
+			  });
+			});
+		</script>
+    	<script src="/js/jquery.ratings.js"></script>
 		<style>
 			body{
 				overflow: auto;

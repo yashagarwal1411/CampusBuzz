@@ -2,6 +2,7 @@ package com.desicoders.hardcode;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -9,6 +10,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONException;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
@@ -279,7 +282,34 @@ public class WebServicesServlet extends HttpServlet{
 			json += "{ \"success\":true, \"message\": \"success123\","
 				+ 	" \"items\" : [ ";
 			for(String title:suggestions.keySet())
-				json += " {\"fullstring\" : \" "+suggestions.get(title)+"\",\"itemId\" : \" "+title+"\"} ,";
+				json += " {\"fullString\" : \" "+suggestions.get(title)+"\",\"itemId\" : \" "+title+"\"} ,";
+			json = json.substring(0, json.length()-1);
+			json += "]}";
+			resp.setContentType("application/json");
+			resp.getWriter().print(json);
+			return;
+		}
+		
+		if(action.equalsIgnoreCase("add_item_rating"))
+		{
+			String query = req.getParameter("query");
+			Map<String,String> suggestions = new HashMap<String, String>();
+			String json = "{"
+					+	"\""+query+"\":\"Li\","
+					+	"\"suggestions\":[";
+			//Map<String,String> externalApps = Utils.externalApps();
+			  //for(String appId:externalApps.keySet())
+			  //{
+			String appId = "http://astudyhall.appspot.com/";
+			try {
+				suggestions = JsonUtils.parseSearchSuggestionsFromDomain(query, appId);
+			} catch (JSONException e) {
+				//continue;
+			}
+			for(String itemId:suggestions.keySet())
+			{
+				json += "\""+suggestions.get(itemId)+"\",";
+			}
 			json = json.substring(0, json.length()-1);
 			json += "]}";
 			resp.setContentType("application/json");
@@ -288,6 +318,8 @@ public class WebServicesServlet extends HttpServlet{
 		}
 		
 		
+		if(action.equalsIgnoreCase("autocomplete"))
+		{
 
  	}
 	

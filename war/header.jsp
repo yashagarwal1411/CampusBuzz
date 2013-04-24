@@ -1,12 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="com.desicoders.hardcode.Utils"%>
 <%@page import="com.google.appengine.api.datastore.Entity" %>
+<%@page import="com.google.appengine.api.datastore.Entity" %>
 
 		<%@include file="iframe-header.jsp"%>
 		<link rel="stylesheet" href="/css/jquery-ui.css" type="text/css" />
 		<link rel="stylesheet" href="/css/searchbox.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery.js"></script>
 		<script type="text/javascript" src="/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="/js/jquery.autocomplete.js"></script>
 		<title>CampusBUZZ</title>
 		<style type="text/css">
 			body {        
@@ -14,6 +16,7 @@
 				overflow: hidden;
 		        font: 13px 'Lucida sans', Arial, Helvetica;
         		margin: 0px;
+        		
        		}
 			
 			.headerLinks{
@@ -103,7 +106,7 @@
 					str = Utils.getSafeHtml(str);
 					if(str.equals("")) str="null";
 				%>
-				<input type="text" name="searchQuery" <% if(str.equals("null")) out.print("placeholder='Search here...' required"); else out.print("value='"+str+"' ");%> />			
+				<input type="text" id="searchQuery" name="searchQuery" <% if(str.equals("null")) out.print("placeholder='Search here...' required"); else out.print("value='"+str+"' ");%> />			
 				<button type="submit">Search</button>			
 			</form>
 		</div>
@@ -122,8 +125,10 @@
   				$( "#dialog" ).dialog( "open" );
   				return false;
 			});
-		
-
+			
+			
+			
+			
 			//check session
 			<% 
 			
@@ -156,5 +161,11 @@
         			}
     			}
 			}
+			
+			var options, a;
+			jQuery(function(){
+			   options = { serviceUrl:'webservices/autocomplete' };
+			   a = $('#searchQuery').autocomplete(options);
+			});
 					
 		</script>

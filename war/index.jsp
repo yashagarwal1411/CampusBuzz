@@ -91,6 +91,7 @@
 					
 					
 			</div>
+			
 			<%@include file="chat.jsp"%>	
 		<style>
 			body{

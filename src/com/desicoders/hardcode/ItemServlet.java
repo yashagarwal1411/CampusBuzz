@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+
 import com.google.appengine.api.blobstore.BlobInfo;
 import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -71,7 +73,11 @@ public class ItemServlet extends HttpServlet{
 			catch (Exception e) {
 				
 			}
-			ItemUtils.addItem(title, description, price,blobKey, currentUser);
+			try {
+				ItemUtils.addItem(title, description, price,blobKey, currentUser,req);
+			} catch (JSONException e) {
+				//do nothing
+			}
 			out.print("<html><head> <meta http-equiv='refresh' content='3;url=/profile.jsp?url=MyItems.jsp' /> Item added!!! </head></html>");
 			//resp.sendRedirect("/profile.jsp"); //modify this later to app. link
 			return;
@@ -266,6 +272,33 @@ public class ItemServlet extends HttpServlet{
 			}
 			return;
 		}
+		
+		if(action.equalsIgnoreCase("addrating1"))
+		{
+			ItemUtils.addRating(item, 1.0);
+			return;
+		}
+		if(action.equalsIgnoreCase("addrating2"))
+		{
+			ItemUtils.addRating(item, 2.0);
+			return;
+		}
+		if(action.equalsIgnoreCase("addrating3"))
+		{
+			ItemUtils.addRating(item, 3.0);
+			return;
+		}
+		if(action.equalsIgnoreCase("addrating4"))
+		{
+			ItemUtils.addRating(item, 4.0);
+			return;
+		}
+		if(action.equalsIgnoreCase("addrating5"))
+		{
+			ItemUtils.addRating(item, 5.0);
+			return;
+		}
+		
 		out.print("<html><head>  <meta http-equiv='refresh' content='3;url=/' /> ");
 		out.print(" Sorry!! No such page exists... </head></html>");
 		

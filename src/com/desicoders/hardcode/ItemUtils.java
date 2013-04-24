@@ -1,15 +1,20 @@
 package com.desicoders.hardcode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 import com.google.appengine.api.blobstore.BlobKey;
@@ -108,7 +113,7 @@ public class ItemUtils {
 	}
 	
 	
-	static boolean addItem(String title,String description,float price,BlobKey blobKey,Entity user)
+	static boolean addItem(String title,String description,float price,BlobKey blobKey,Entity user,HttpServletRequest req) throws IOException, JSONException
 	{	 
 		
 		 if(user==null)
@@ -130,6 +135,9 @@ public class ItemUtils {
 		 item.setProperty("OwnerKey",user.getKey() );
 		 item.setProperty("FTS",ftsTokens);
 		 item.setProperty("isActive", 1);
+		 item.setProperty("Rating", 0.0);
+		 item.setProperty("VotersNumber",0);
+		 item.setProperty("Feedback", null);
 		 
 		 SearchUtils.updateFTSStuffForItem(item);
 		 
@@ -143,6 +151,15 @@ public class ItemUtils {
 	     }
 		 
 		 Utils.put(item);		 
+		 Map<String,String> externalApps=Utils.externalApps();
+		 for(String appId : externalApps.keySet())
+		 {
+			 String data = "[{\"id\":\" "+ item.getKey().getId()+"\"";//check this as this is a recently added item key might not be complete
+			 data += JsonUtils.getJSONforItem(item, req)+"]";
+			 String url = appId + "webservices/new_item=" + data;
+			 JSONObject json = JsonUtils.readJsonFromUrl(url);
+			 //add code to handle success response
+		 }
 		 
 		 _log.info("item added #"+item.toString());
 		 return true;//to indicate success
@@ -160,8 +177,7 @@ public class ItemUtils {
 	}
 	
 	static boolean editItem(String title,String description,float price,int isActive,BlobKey blobKey,Entity item,Entity user)
-	{
-		
+	{		
 		if(isUserOwner(item, user) )	
 		{
 			 item.setProperty("Title", title);
@@ -287,6 +303,24 @@ public class ItemUtils {
 		return detailsVisible;
 	}
 	
+	
+	public static boolean addRating(Entity item, double rating)
+	{
+		double value = 0;
+		if(item.hasProperty("Rating"))
+			value = Double.parseDouble(item.getProperty("Rating").toString());
+		
+		long numberOfVoters = (long) 0;
+		if(item.hasProperty("VotersNumber"))
+			numberOfVoters = (Long)item.getProperty("VotersNumber");
+		
+		
+		value = (value*numberOfVoters+rating)/(numberOfVoters+1);
+		item.setProperty("Rating", value);
+		item.setProperty("VotersNumber",numberOfVoters+1);
+		Utils.put(item);
+		return true;
+	}
 	
 	
 	
