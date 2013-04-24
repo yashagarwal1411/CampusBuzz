@@ -11,7 +11,7 @@
 	<body>
 	<p id="page-message"></p>	
 	
-	 <form method="post" action="/users/export">	
+	 <form method="get" action="/users/export">	
 		Please select a site where you want to export your  account :<br><br>
 		Please note this will delete your account from this site
 		

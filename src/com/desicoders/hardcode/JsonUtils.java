@@ -16,7 +16,14 @@ public class JsonUtils {
 	
 
 		  public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
-			    String[] parts = url.split("?");
+			    		    
+			     JSONObject json = new JSONObject(readPlainFromUrl(url));
+			     return json;
+		    
+		  }
+
+		  public static String readPlainFromUrl(String url) throws IOException{
+			  String[] parts = url.split("\\?");
 			    String urlParameters="";
 				String request = parts[0];
 				if(parts.length>1)
@@ -48,11 +55,8 @@ public class JsonUtils {
 			     }
 			     br.close();
 			     String responseString = sb.toString();
-		    
-			     JSONObject json = new JSONObject(responseString);
-			     return json;
-		    
-		  }
+			     return responseString;
 
+		  }
 		  
 }

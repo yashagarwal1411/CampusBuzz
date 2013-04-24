@@ -179,27 +179,31 @@ public class Utils extends DatastoreUtils{
 		Entity user = getUserFromSession(req);
 		String json;
 		json = "{"
-				+"\"profile\":"
-				+"{"
-					+"\"Email\" : \""+(String)user.getProperty("Email")+"\","
-					+"\"fname\" : \""+(String)user.getProperty("fname")+"\","
-					+"\"lname\" : \""+(String)user.getProperty("lname")+"\","
-					+"\"Description\" : \""+(String)user.getProperty("Description")+"\","
-					+"\"image\" : \""+ req.getServerName()+"/users/pic/"+user.getKey().getId() +"\","
-				+"},"
+				
+				+"\"ga_id\" : \"\","
+				
+				+"\"name\" : \""+(String)user.getProperty("fname")+"\","
+				
+				+"\"bio\" : \""+(String)user.getProperty("Description")+"\","
+					
+				
 			    
-				+"\"items\":"
-				+"[";
+				+"\"items\":[";
+				
 				
 		
 		
-			List<Entity> items = ItemUtils.listPostedItems(user);
-			for(Entity item : items){
-				
-				json+=getJSONforItem(item, req)+",";
-			}
-			json = json.substring(0, json.length()-1);
-			json+="]}" ;
+				List<Entity> items = ItemUtils.listPostedItems(user);
+				for(Entity item : items){
+					
+					json+=getJSONforItem(item, req)+",";
+				}
+				if(items.size()!=0)
+					json = json.substring(0, json.length()-1);
+				json+="]," 
+				+"\"email\" : \""+(String)user.getProperty("Email")+"\","
+				+"\"google_user_id\" : \"\""
+				+"}" ;
 
 		return json;
 	}

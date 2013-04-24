@@ -284,14 +284,15 @@ public class UserServlet extends HttpServlet {
 			// JSON content to post
 			String userJson = Utils.getUserDataJson(req);
 			String appId= req.getParameter("appId");
+			appId = appId.substring(1, appId.length()-1);
 			String authToken = Utils.getAuthToken(appId);
 			JSONObject exportResult;
-			try {
-				exportResult = JsonUtils.readJsonFromUrl(appId+"?auth_token="+authToken+"user_data="+userJson);
-				resp.getWriter().print(exportResult.toString());
-			} catch (JSONException e) {
-				resp.getWriter().print("failed");
-			}
+			//try {
+				//exportResult = JsonUtils.readJsonFromUrl(appId+"webservices/user_import/?auth_token="+authToken+"&user_data="+userJson);
+				resp.getWriter().print(JsonUtils.readPlainFromUrl(appId+"webservices/user_import?auth_token="+authToken+"&user_data="+userJson));
+//			} catch (Exception e) {
+//				resp.getWriter().print("failed");
+//			}
 			
 		}
 	}
