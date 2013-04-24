@@ -15,9 +15,11 @@
 		
 		<%
 				String id = request.getParameter("id");
+			
 				String email="";
 				String msgBody="";
 				String subject="";
+				String extApp = "";
 				if(id!=null && !id.equals("")){
 					Entity user = Utils.getUserFromSession(request);
 					if(user==null){
@@ -27,6 +29,11 @@
 					Entity msg = Utils.getEntity(KeyFactory.stringToKey(id));
 					if(msg ==null)
 						return;
+					
+					if(msg.hasProperty("ExtApp")){
+						extApp = (String) msg.getProperty("ExtApp");
+						
+					}
 					String to = (String) msg.getProperty("to");
 					to = Utils.getSafeHtml(to);
 					String from = (String) msg.getProperty("from");
@@ -61,7 +68,7 @@
 			
 		<p id="page-message" />
 		
-		<form method="post" action="/message/send">
+		<form method="post" action="/message/send" i="form">
 		
 		<table class="buzz-text">
 			<tr>
@@ -94,6 +101,11 @@
 			if(getQueryStringParam("title")!=null)
 				$("#subject").val("In reference to your item '"+getQueryStringParam("title")+"' priced "+getQueryStringParam("price")+"$");
 			
+			var extApp = "<%=extApp%>";
+			if(extApp!=""){
+				//change the form details
+				$("#form").attr("action","/message/send_message_ext?ext_app="+extpp);
+			}
 		</script>
 	</body>
 </html>

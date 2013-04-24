@@ -145,4 +145,53 @@ public class Utils extends DatastoreUtils{
 		String safeHTML = policy.sanitize(untrustedHTML);
 		return safeHTML;
 	}
+	
+	public static boolean isAppAuthorized(HttpServletRequest req){
+		String domain = req.getServerName();
+		Filter appIdFilter = FilterOperator.EQUAL.of("appId",
+				domain);
+		Query q = new Query("AuthorizedApp").setFilter(appIdFilter);
+		Entity authorizedApp;
+		List<Entity> apps = Utils.runQuery(q);
+		if (apps.size() != 0){
+			authorizedApp = apps.get(0);
+			String token = (String) authorizedApp.getProperty("token");
+			if(req.getParameter("authToken").equals(token))
+				return true;
+		}
+		else
+			return false;
+		return false;
+	}
+	
+	public static String getIdFromEmail(String email){
+		Filter emailFilter = FilterOperator.EQUAL.of("Email",
+				email);
+		Query q = new Query("User").setFilter(emailFilter);
+		List<Entity> users = Utils.runQuery(q);
+		if(users.size()==0)
+			return null;
+		String id = String.valueOf(users.get(0).getKey().getId());
+		return id;
+	}
+	
+	public static String getUserDataJson(HttpServletRequest req){
+		Entity user = getUserFromSession(req);
+		String json;
+		json = "{"
+				+"\"Email\" : \""+(String)user.getProperty("Email")+"\""
+				+"\"fname\" : \""+(String)user.getProperty("fname")+"\""
+				+"\"lname\" : \""+(String)user.getProperty("lname")+"\""
+				+"\"Description\" : \""+(String)user.getProperty("Description")+"\""
+				+"\"imageUrl\" : \""+(String)user.getProperty("PicBlobKey")+"\""
+			    ;
+			+	items:
+				[{
+					item_id: STRING
+					... (specified before)
+				}]
+			}   
+
+		return json;
+	}
 }

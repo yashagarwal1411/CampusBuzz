@@ -53,6 +53,7 @@
 			    	<ul>
 					<li><a href="#" onClick="reloadDiv('/personal.jsp')">Personal Details</a></li>
 					<li><a href="#" onClick="reloadDiv('/changepasswd.jsp')">Change Password</a></li>
+					<li><a href="#" onClick="reloadDiv('/export.jsp')">Export Account</a></li>
 					</ul>
 			    </div >
 			    <div class="category">

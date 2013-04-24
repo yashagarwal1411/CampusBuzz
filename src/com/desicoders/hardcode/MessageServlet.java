@@ -47,6 +47,42 @@ public class MessageServlet extends HttpServlet{
 			return;
 		}
 		
+		if(action.equalsIgnoreCase("send_message_ext")){
+			try{
+				String appId = Utils.getSafeHtml(req.getParameter("ext_app"));
+				String to = Utils.getSafeHtml(req.getParameter("to"));
+				String[] toEmails = to.split(";");
+				String from = (String) Utils.getUserFromSession(req).getProperty("Email");
+				String fromId = Utils.getIdFromEmail(from);
+				String subject = Utils.getSafeHtml(req.getParameter("subject"));
+				String body = Utils.getSafeHtml(req.getParameter("body"));
+				Text msgBody = new Text(body);
+				for(String s: toEmails){
+					s= s.trim();
+					Entity message = Utils.createEntity("Message");
+					message.setProperty("to",s);
+					message.setProperty("from",from);
+					message.setProperty("subject",subject);
+					message.setProperty("body",msgBody);
+					message.setProperty("date", new Date());
+					message.setProperty("ExtApp", appId);
+					Utils.put(message);
+					
+					JsonUtils.readJsonFromUrl(appId+"/webservices/send_message?destination_user_id="+to
+							+"&source_user_id="+fromId+"&subject="+subject+"$body="+body+"source_conversation_id="+message.getKey());
+					
+					
+					_log.info("message saved #"+message.toString());
+					resp.sendRedirect("/profile.jsp?url=compose.jsp&sent=true");
+				}
+			}catch (Exception e) {
+					resp.sendRedirect("/profile.jsp?url=compose.jsp&sent=false");
+			}
+			
+			
+			return;
+		}
+		
 		
 	}
 }

@@ -16,6 +16,7 @@
 				return;
 			}
 			String id = request.getParameter("id");
+			
 			Entity msg = Utils.getEntity(KeyFactory.stringToKey(id));
 			String to = (String) msg.getProperty("to");
 			String from = (String) msg.getProperty("from");

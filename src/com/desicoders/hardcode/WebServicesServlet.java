@@ -23,18 +23,59 @@ public class WebServicesServlet extends HttpServlet{
 	
 		String action = Utils.getActionFromUrl(req);
 		if(action.equalsIgnoreCase("send_message")){
+			 String json;
+			 resp.setContentType("application/json");
+			 
+			 if(!Utils.isAppAuthorized(req)){
+				 json = 		"{\"success\": \"false\" ,"
+							+		" \"message\" : \"unauthorized\","
+							+		"\"conversation_id\": "+"\"null\""
+							+	"}";
+				 resp.getWriter().print(json);
+				 return ; //false json response
+			 }
+			 
+			 String item_id = Utils.getSafeHtml(req.getParameter("item_id"));
+			 String source_user_id = Utils.getSafeHtml(req.getParameter("source_user_id"));
+			 String source_user_name = Utils.getSafeHtml(req.getParameter("source_user_name"));
+			 String destination_user_id = Utils.getSafeHtml(req.getParameter("destination_user_id"));
+			 String subject = Utils.getSafeHtml(req.getParameter("subject"));
+			 String message = Utils.getSafeHtml(req.getParameter("message"));
+			 String source_conversation_id = Utils.getSafeHtml(req.getParameter("source_conversation_id"));
 			
-			 String item_id = req.getParameter("item_id");
-			 String source_user_id = req.getParameter("source_user_id");
-			 String source_user_name = req.getParameter("source_user_name");
-			 String destination_user_id = req.getParameter("destination_user_id");
-			 String subject = req.getParameter("subject");
-			 String message = req.getParameter("message");
-			 String auth_token = req.getParameter("auth_token");
+			Entity msg = Utils.getEntity(KeyFactory.stringToKey(source_conversation_id));
+			if(msg==null)
+				msg = Utils.createEntity("Message");
+			else
+				subject = subject + "\n--\n" + msg.getProperty("body");
+			
+			msg.setProperty("ExtApp",req.getServerName());
+			Entity user = Utils.getEntity(KeyFactory.stringToKey(destination_user_id));
+			if(user==null){
+				json = 		"{\"success\": \"false\", "
+						+		" \"message\" : \"no such user\","
+						+		"\"conversation_id\": "+"\"null\""
+						+	"}";
+				 resp.getWriter().print(json);
+				 return ; //false json response
+			}
+				
+				
+			msg.setProperty("to",(String) user.getProperty("Email"));
+			msg.setProperty("from",source_user_id);
+			msg.setProperty("subject","Message from "+source_user_name+" using "+req.getServerName()+" "+subject);
+			msg.setProperty("body",message);
+			msg.setProperty("date", new Date());
+			
+			Utils.put(msg);
+			_log.info("message saved #"+msg.toString());
 			 
-			 
-			 
-			 resp.getWriter().print("Success");
+			json = 		"{\"success\": \"true\" ,"
+						+		" \"message\" : \"success\","
+						+		"\"conversation_id\": "+"\""+ msg.getKey()+"\""
+						+	"}";
+						
+			 resp.getWriter().print(json); //send json here
 			 return;
 		}
 		return;
@@ -104,6 +145,89 @@ public class WebServicesServlet extends HttpServlet{
 			 return;
 		}
 		
+
+		
+		if(action.equalsIgnoreCase("send_message")){
+			 String json;
+			 resp.setContentType("application/json");
+			 
+//			 if(!Utils.isAppAuthorized(req)){
+//				 json = 		"{\"success\": \"false\" ,"
+//							+		" \"message\" : \"unauthorized\","
+//							+		"\"conversation_id\": "+"\"null\""
+//							+	"}";
+//				 resp.getWriter().print(json);
+//				 return ; //false json response
+//			 }
+//			 
+			 String item_id = req.getParameter("item_id");
+			 String source_user_id = req.getParameter("source_user_id");
+			 String source_user_name = req.getParameter("source_user_name");
+			 String destination_user_id = req.getParameter("destination_user_id");
+			 String subject = req.getParameter("subject");
+			 String message = req.getParameter("message");
+			 Text messageBody = new Text(message);
+			 String source_conversation_id = req.getParameter("source_conversation_id");
+			 Entity msg = null;
+			 if(source_conversation_id!=null)
+				 msg= Utils.getEntity(KeyFactory.stringToKey(source_conversation_id));
+			
+			 if(msg==null)
+				msg = Utils.createEntity("Message");
+			else
+				subject = subject + "\n--\n" + msg.getProperty("body");
+			
+			msg.setProperty("ExtApp",req.getServerName());
+			if(destination_user_id==null){
+				json = 		"{\"success\": \"false\", "
+						+		" \"message\" : \"no destination user provided\","
+						+		"\"conversation_id\": "+"\"null\""
+						+	"}";
+				 resp.getWriter().print(json);
+				 return ; //false json response
+			}
+			Key destinationUserKey ;
+			try{
+				destinationUserKey = KeyFactory.stringToKey(destination_user_id);
+			}catch (Exception e) {
+				json = 		"{\"success\": \"false\", "
+						+		" \"message\" : \"invalid key for destination_user_id\","
+						+		"\"conversation_id\": "+"\"null\""
+						+	"}";
+				 resp.getWriter().print(json);
+				 return ; //false json response
+				
+			}
+			Entity user = Utils.getEntity(destinationUserKey);
+			if(user==null){
+				json = 		"{\"success\": \"false\", "
+						+		" \"message\" : \"no such user\","
+						+		"\"conversation_id\": "+"\"null\""
+						+	"}";
+				 resp.getWriter().print(json);
+				 return ; //false json response
+			}
+				
+				
+			msg.setProperty("to",(String) user.getProperty("Email"));
+			msg.setProperty("from",source_user_id);
+			msg.setProperty("subject",subject);
+			msg.setProperty("body",messageBody);
+			msg.setProperty("date", new Date());
+			
+			Utils.put(msg);
+			_log.info("message saved #"+msg.toString());
+			 
+			json = 		"{\"success\": \"true\" ,"
+						+		" \"message\" : \"success\","
+						+		"\"conversation_id\": "+"\""+ msg.getKey()+"\""
+						+	"}";
+						
+			 resp.getWriter().print(json); //send json here
+			 return;
+		}
+		
+
 		if(action.equalsIgnoreCase("item"))
 		{
 			String auth_token = req.getParameter("auth_token");
@@ -148,6 +272,7 @@ public class WebServicesServlet extends HttpServlet{
 		}
 		
 		
+
  	}
 		
 }

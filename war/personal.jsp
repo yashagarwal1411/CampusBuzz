@@ -68,6 +68,8 @@
 		<input type="button" class="button" value="Save" onClick="$('form').submit()" style="margin-left:20px"/>
 		<input type="button" class="button" value="Remove all Items & Data" onClick="clearData()"/>
 		<input type="button" class="button" value="Delete account" onClick="deleteAccount()" />
+		
+		<br><br>
 		<script>
 			var qString = location.search;
 			if(qString.indexOf("success")!=-1)
@@ -109,6 +111,8 @@
 				}
 				
 			}
+			
+			
 		</script>
 	</body>
 </html>

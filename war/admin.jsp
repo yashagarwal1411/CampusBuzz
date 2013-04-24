@@ -46,6 +46,8 @@
 			    	<ul>
 			    	<li><a href="#" onClick="reloadIframe('userops.jsp')">User Operation</a></li>
 					<li><a href="#" onClick="reloadIframe('invite-admin.jsp')">Create Admin</a></li>
+					<li><a href="#" onClick="reloadIframe('authorize-app.jsp')">Authorize External App</a></li>
+					<li><a href="#" onClick="reloadIframe('add-app.jsp')">Add External App</a></li>
 					</ul>
 			    </div >
 				

@@ -216,8 +216,60 @@ public class UserServlet extends HttpServlet {
 			}
 			return;
 		}
+		
+		if (action.equalsIgnoreCase("authApp")) {
+			Entity admin = Utils.getUserFromSession(req);
+			if(admin.hasProperty("isAdmin")){
+				String appId = req.getParameter("appId");
+				try{
+				String token=Utils.getRandomString();
+				Filter appIdFilter = FilterOperator.EQUAL.of("appId",
+						appId);
+				Query q = new Query("AuthorizedApp").setFilter(appIdFilter);
+				Entity authorizedApp;
+				List<Entity> apps = Utils.runQuery(q);
+				if (apps.size() != 0)
+					authorizedApp = apps.get(0);
+				else
+					authorizedApp = Utils.createEntity("AuthorizedApp");
+				
+				authorizedApp.setProperty("id",appId);
+				authorizedApp.setProperty("token",token);
+				Utils.put(authorizedApp);
+				resp.getWriter().print(token);
+				
+				} catch (Exception e) {
+					resp.getWriter().print("Please try again !!");
+				}
+			}
+			return;
+		}
 
+		
+		if (action.equalsIgnoreCase("addApp")) {
+			Entity admin = Utils.getUserFromSession(req);
+			if(admin.hasProperty("isAdmin")){
+				String appId = req.getParameter("appId");
+				String token = req.getParameter("token");
+				Filter appIdFilter = FilterOperator.EQUAL.of("appId",
+						appId);
+				Query q = new Query("AuthorizedApp").setFilter(appIdFilter);
+				Entity externalApp;
+				List<Entity> apps = Utils.runQuery(q);
+				if (apps.size() != 0)
+					externalApp = apps.get(0);
+				else
+					externalApp = Utils.createEntity("AuthorizedApp");
+				externalApp = Utils.createEntity("ExternalApp");
+				externalApp.setProperty("appId",appId);
+				externalApp.setProperty("token",token);
+				Utils.put(externalApp);
+				
+			}
+			return;
+		}
 	}
+	
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
@@ -337,6 +389,9 @@ public class UserServlet extends HttpServlet {
 			}
 			return;
 		}
+		
+		
+		
 
 	}
 
