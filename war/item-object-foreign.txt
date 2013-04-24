@@ -1,39 +1,46 @@
-
 <%
-				JSONArray itemsForeign = json.getJSONArray("items");
-				out.println("<div class='items'>");
-				for (int i = 0; i < itemsForeign.length(); i++)
-				{ 
-						JSONObject item = itemsForeign.getJSONObject(i);
-						%>
-						<div class = "item" >						
-						<div class="itemImage" onClick="location.href = ''">
-						<img src="<%=item.getString("image") %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="100" height="120" />
-						<br />
-						</div>
-						<div class="itemTitle" >
-						<%=item.getString("title")%><br />
-						</div>
-						<div class="itemPrice" >
-						Price : <%=item.getString("price")%> $<br />
-						</div>
-						<div class="itemDescription" >
+				boolean result = json.getBoolean("success");
+				if(result == true)
+				{
+					JSONArray itemsForeign = json.getJSONArray("items");
+					out.println("<div class='items'>");
+					for (int idx = 0; idx < itemsForeign.length(); idx++)
+					{ 
+							JSONObject item = itemsForeign.getJSONObject(idx);
+							%>
+							<div class = "item" >						
+							<div class="itemImage" onClick="location.href = ''">
+							<img src="<%=item.getString("image") %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="100" height="120" />
+							<br />
+							</div>
+							<div class="itemTitle" >
+							<%=item.getString("title")%><br />
+							</div>
+							<div class="itemPrice" >
+							Price : <%=item.getString("price")%> $<br />
+							</div>
+							<div class="itemDescription" >
+							
+							<%
+							String description = item.getString("description");
+							if(description.length()>50)
+								out.println(description.subSequence(0, 30)+"....");
+							else
+								out.println(description);
+							%>
+							
+							</div>
+							</div>
+							<%
 						
-						<%
-						String description = item.getString("description");
-						if(description.length()>50)
-							out.println(description.subSequence(0, 30)+"....");
-						else
-							out.println(description);
-						%>
-						
-						</div>
-						</div>
-						<%
-					}
-					out.println("</div>");
-				}else{
-					out.print("<p id='page-message'>No Items !!</p>");
+						out.println("</div>");
+						}
+					if(itemsForeign.length() == 0)
+						out.print("<p id='page-message'>No Items !!</p>");
+				}
+				else
+				{
+					out.print(json.getString("message"));
 				}
 			%>			
 		<br/><br/>

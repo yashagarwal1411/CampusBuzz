@@ -66,15 +66,25 @@
 					<%@include file="item-object.txt"%>
 					
 				<%
-				    if(!request.getParameter("searchQuery").equalsIgnoreCase(""))
+				    if(request.getParameter("searchQuery") != null)
 				    {
 					String[] compatibleApps = {"http://astudyhall.appspot.com/"};
 					for(int i=0;i<compatibleApps.length;i++)
 					{
-						compatibleApps[i] = compatibleApps[i] + "webservices/search?query='" + request.getParameter("searchQuery")+"'";
-						JSONObject json = JsonUtils.readJsonFromUrl(compatibleApps[i]);
-						%>
 						
+					    String domainName = compatibleApps[i];
+						compatibleApps[i] = compatibleApps[i] + "webservices/search?query=" + request.getParameter("searchQuery");
+						compatibleApps[i] += "&limit=5&offset=0&auth_token=";
+						JSONObject json = JsonUtils.readJsonFromUrl(compatibleApps[i]);
+						
+						//JSONObject json = (JSONObject)result.get("Result");
+						%>
+						<div style="clear: both;">
+						<hr>
+						Results from <a href="<%=domainName%>"><%=domainName%></a>
+						<br><br>
+						<%@include file="item-object-foreign.txt"%> 						
+						</div>
 						<%						
 					}
 				    }

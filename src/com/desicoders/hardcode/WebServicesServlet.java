@@ -44,7 +44,7 @@ public class WebServicesServlet extends HttpServlet{
 	  public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String action = Utils.getActionFromUrl(req);
 		if(action.equalsIgnoreCase("search")){
-			 String search_by = req.getParameter("search_by");
+			 
 			 String query = req.getParameter("query");
 			 String limitStr = req.getParameter("limit");
 			 String offsetStr = req.getParameter("offset");
@@ -70,9 +70,12 @@ public class WebServicesServlet extends HttpServlet{
 				 return;
 			 }
 			 List<Entity> searchResults = SearchUtils.searchAll(query);
-			 String json = "{ \"items\" : [";
-			 if(searchResults == null)
-				 return;
+			 String json = ""; 
+			 json += "{ \"success\":\"true\", \"message\": \"success\", \"total\": \""+searchResults.size()+"\",";
+			 json += " \"sponsoredItems\" : [],";
+			 json += " \"items\" : [ ";
+			 if(searchResults != null)
+			 {
 			 for(int idx = offset;idx < searchResults.size() && idx<(offset+limit);idx++)
 			 {
 				 Entity item = searchResults.get(idx);
@@ -82,15 +85,19 @@ public class WebServicesServlet extends HttpServlet{
 				                + " \"id\": \" "+ item.getKey().getId() +"\","
 				                + "\"title\" : \""+item.getProperty("Title")+"\","
 				                + "\"description\" : \""+item.getProperty("Description")+"\","
-				                + "\"seller\" : \""+item.getProperty(owner.getProperty("fname")+" "+owner.getProperty("lname"))+"\","
-				                + "\"sellerID\" : \""+owner.getKey().getId()+"\","
+				                + "\"seller\" : [{" 
+				                +    	" \"username\" : \" "+item.getProperty(owner.getProperty("fname")+" "+owner.getProperty("lname"))+"\","
+				                +		" \"id\" : \" "+ owner.getKey().getId()+"\""
+				                +       "}],"				                
 				                + "\"price\" : \""+item.getProperty("Price")+"\","
 				                + "\"image\" : \""+ req.getServerName()+"/items/pic/"+item.getKey().getId()  +"\","
 				                + "\"url\" : \""+req.getServerName()+"/items/details/"+item.getKey().getId()+"\""
 				            + "},"; 
-			 }			 
+			 }
+			 
 			 json = json.substring(0, json.length()-1);
-			 json += "]}";
+			 }
+			 json += " ]} ";
 			 resp.setContentType("application/json");
 			 resp.getWriter().print(json);
 			 return;
