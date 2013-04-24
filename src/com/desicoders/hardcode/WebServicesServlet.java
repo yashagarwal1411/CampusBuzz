@@ -3,6 +3,7 @@ package com.desicoders.hardcode;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
@@ -71,7 +72,7 @@ public class WebServicesServlet extends HttpServlet{
 			 }
 			 List<Entity> searchResults = SearchUtils.searchAll(query);
 			 String json = ""; 
-			 json += "{ \"success\":\"true\", \"message\": \"success\", \"total\": \""+searchResults.size()+"\",";
+			 json += "{ \"success\":true, \"message\": \"success123\", \"total\": \""+searchResults.size()+"\",";
 			 json += " \"sponsoredItems\" : [],";
 			 json += " \"items\" : [ ";
 			 if(searchResults != null)
@@ -102,6 +103,50 @@ public class WebServicesServlet extends HttpServlet{
 			 resp.getWriter().print(json);
 			 return;
 		}
+		
+		if(action.equalsIgnoreCase("item"))
+		{
+			String auth_token = req.getParameter("auth_token");
+			Long item_id = Long.parseLong(req.getParameter("item_id"));
+			Entity item = Utils.getEntityFromId(item_id, "Item");
+			if(item == null)
+			{
+				return;
+			}
+			Entity owner = 	DatastoreUtils.getEntity((Key)item.getProperty("OwnerKey"));
+			String json ="";
+			json += "{ \"title\":\""+item.getProperty("Title")+"\","
+				+	"\"description\":\""+item.getProperty("Description")+"\","
+				+ 	"\"seller\" : [{" 
+	            +    	" \"username\" : \" "+item.getProperty(owner.getProperty("fname")+" "+owner.getProperty("lname"))+"\","
+	            +		" \"id\" : \" "+ owner.getKey().getId()+"\""
+	            +       "}],"
+	            + 	"\"price\" : \""+item.getProperty("Price")+"\","
+                + 	"\"image\" : \""+ req.getServerName()+"/items/pic/"+item.getKey().getId()  +"\","
+                + 	"\"url\" : \""+req.getServerName()+"/items/details/"+item.getKey().getId()+"\""
+            + "}"; 
+			resp.setContentType("application/json");
+			 resp.getWriter().print(json);
+			 return;
+		}
+		
+		if(action.equalsIgnoreCase("search_suggestions"))
+		{
+			String auth_token = req.getParameter("auth_token");
+			String query = req.getParameter("query");
+			Map<String,String> suggestions = SearchUtils.searchSuggestions(query);
+			String json ="";
+			json += "{ \"success\":true, \"message\": \"success123\","
+				+ 	" \"items\" : [ ";
+			for(String title:suggestions.keySet())
+				json += " {\"fullstring\" : \" "+suggestions.get(title)+"\",\"itemId\" : \" "+title+"\"} ,";
+			json = json.substring(0, json.length()-1);
+			json += "]}";
+			resp.setContentType("application/json");
+			resp.getWriter().print(json);
+			return;
+		}
+		
 		
  	}
 		

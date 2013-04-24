@@ -1,7 +1,9 @@
 package com.desicoders.hardcode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -186,6 +188,18 @@ public class DatastoreUtils {
 		user2.setProperty("Description", "");
 		Utils.put(user2);
 		 _log.info("Test User 'hardcodetes2@gmail.com 'created");
+    }
+    
+    public static Map<String,String> externalApps()
+    {
+    	List<Entity> externalApps = Utils.getEntity("ExternalApp");
+    	Map<String,String> apps=new HashMap<String, String>();
+    	for(Entity ent:externalApps)
+    	{
+    		apps.put(ent.getProperty("appId").toString(), ent.getProperty("token").toString());    		
+    	}
+    	return apps;
+    			
     }
     
 }

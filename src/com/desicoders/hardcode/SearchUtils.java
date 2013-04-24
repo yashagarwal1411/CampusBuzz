@@ -1,11 +1,20 @@
 package com.desicoders.hardcode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
+
+import org.mortbay.log.Log;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PropertyProjection;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 
 /*
@@ -23,7 +32,7 @@ public class SearchUtils {
 
 	public static final int MAXIMUM_NUMBER_OF_WORDS_TO_SEARCH = 5;  
     public static final int MAX_NUMBER_OF_WORDS_TO_PUT_IN_INDEX = 200;
-
+    public static final Logger _log = Logger.getLogger(WebServicesServlet.class.getName());
 	
 	@SuppressWarnings("deprecation")
 	public static List<Entity> searchAll(String searchQuery)
@@ -66,6 +75,39 @@ public class SearchUtils {
 		{
 			return null;
 		}							
+	}
+	
+	public static Map<String, String> searchSuggestions(String query)
+	{
+		//List<String> itemId = new ArrayList<String>();
+		//List<String> suggestions = new ArrayList<String>();
+		Map<String, String> dictionary = new HashMap<String, String>();
+		
+		if(query.length()<4)
+			return dictionary;
+		Filter search1 = FilterOperator.GREATER_THAN_OR_EQUAL.of("Title",query);
+		Filter search2 = FilterOperator.LESS_THAN_OR_EQUAL.of("Title", query+"z");
+		CompositeFilter filter = CompositeFilterOperator.and(search1,search2);
+		Query q = new Query("Item").setFilter(filter).addProjection(new PropertyProjection("Title",String.class));
+		try
+		{		
+			List<Entity> results = Utils.runQuery(q);
+			for(Entity item : results)
+			{
+				_log.info("title is :" + item.getProperty("Title").toString());
+				//suggestions.add(item.getProperty("Title").toString());
+				//itemId.add(item.getKey().getId()+"");
+				dictionary.put(item.getKey().getId()+"",item.getProperty("Title").toString());
+				
+			}
+			//List<String>[] output = new ArrayList<String>()[2];
+			return dictionary;
+		}
+		catch(Exception ex)
+		{
+			return dictionary;
+		}
+		
 	}
 	
 	 public static void updateFTSStuffForItem(

@@ -68,7 +68,7 @@
 				<%
 				    if(request.getParameter("searchQuery") != null)
 				    {
-					String[] compatibleApps = {"http://astudyhall.appspot.com/"};
+					String[] compatibleApps = {"https://astudyhall.appspot.com/"};
 					for(int i=0;i<compatibleApps.length;i++)
 					{
 						
@@ -77,7 +77,6 @@
 						compatibleApps[i] += "&limit=5&offset=0&auth_token=";
 						JSONObject json = JsonUtils.readJsonFromUrl(compatibleApps[i]);
 						
-						//JSONObject json = (JSONObject)result.get("Result");
 						%>
 						<div style="clear: both;">
 						<hr>

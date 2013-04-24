@@ -143,6 +143,7 @@ public class ItemUtils {
 	     }
 		 
 		 Utils.put(item);		 
+		 
 		 _log.info("item added #"+item.toString());
 		 return true;//to indicate success
 	}
