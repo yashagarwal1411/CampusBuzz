@@ -155,7 +155,7 @@ public class ItemUtils {
 		 for(String appId : externalApps.keySet())
 		 {
 			 String data = "[{\"id\":\" "+ item.getKey().getId()+"\"";//check this as this is a recently added item key might not be complete
-			 data += JsonUtils.getJSONforItem(item, req)+"]";
+			 data += Utils.getJSONforItem(item, req)+"]";
 			 String url = appId + "webservices/new_item=" + data;
 			 JSONObject json = JsonUtils.readJsonFromUrl(url);
 			 //add code to handle success response

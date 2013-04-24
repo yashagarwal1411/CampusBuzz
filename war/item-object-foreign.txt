@@ -3,13 +3,17 @@
 				if(result == true)
 				{
 					JSONArray itemsForeign = json.getJSONArray("items");
+					
 					out.println("<div class='items'>");
 					for (int idx = 0; idx < itemsForeign.length(); idx++)
 					{ 
 							JSONObject item = itemsForeign.getJSONObject(idx);
+							
+							//JSONObject seller = new JSONObject(item.getString("seller"));
+							//String username=seller.getString("username");
 							%>
-							<div class = "item" >						
-							<div class="itemImage" onClick="location.href = ''">
+							<div class = "item"  >						
+							<div class="itemImage" onClick="popupMe('<%=countExtItem%>')">
 							<img src="<%=item.getString("image") %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="100" height="120" />
 							<br />
 							</div>
@@ -31,9 +35,29 @@
 							
 							</div>
 							</div>
+							<div id="<%=countExtItem++%>" style="display:none">
+								<div id="left-column">
+									<div id="title">
+										<%=item.getString("title")%>
+									</div>
+									<div class="box">
+						        		<h1>PRICE : <%=item.getString("price")%> $</h1>        		
+						        		<div id="example-2"></div> <br />
+						    			Your Rating: <span id="example-rating-2">not set</span> 
+						        		 		
+									</div>
+									<h2>DESCRIPTION</h2>
+									<div class="item-desc">
+										<%= item.getString("description") %>
+									</div>
+								</div>
+								<div id="right-column">
+									<div id="main-image"><img src="<%= item.getString("image") %>" onError="this.onerror=null;this.src='/css/images/noimageavailable.jpg';" width="160" height="188" /></div>
+								</div>
+							</div> 
 							<%
 						
-						out.println("</div>");
+						//out.println("</div>");
 						}
 					if(itemsForeign.length() == 0)
 						out.print("<p id='page-message'>No Items !!</p>");
@@ -44,3 +68,9 @@
 				}
 			%>			
 		<br/><br/>
+		<script>
+			function popupMe(indx){
+				$( "#item-dialog" ).html($('#'+indx).html()).dialog({autoOpen:false,title:"Item",width:850});
+  				$( "#item-dialog" ).dialog( "open" );
+			}
+		</script>

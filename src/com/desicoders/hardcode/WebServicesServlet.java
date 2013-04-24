@@ -290,36 +290,35 @@ public class WebServicesServlet extends HttpServlet{
 			return;
 		}
 		
-		if(action.equalsIgnoreCase("add_item_rating"))
-		{
-			String query = req.getParameter("query");
-			Map<String,String> suggestions = new HashMap<String, String>();
-			String json = "{"
-					+	"\""+query+"\":\"Li\","
-					+	"\"suggestions\":[";
-			//Map<String,String> externalApps = Utils.externalApps();
-			  //for(String appId:externalApps.keySet())
-			  //{
-			String appId = "http://astudyhall.appspot.com/";
-			try {
-				suggestions = JsonUtils.parseSearchSuggestionsFromDomain(query, appId);
-			} catch (JSONException e) {
-				//continue;
-			}
-			for(String itemId:suggestions.keySet())
-			{
-				json += "\""+suggestions.get(itemId)+"\",";
-			}
-			json = json.substring(0, json.length()-1);
-			json += "]}";
-			resp.setContentType("application/json");
-			resp.getWriter().print(json);
-			return;
-		}
+//		if(action.equalsIgnoreCase("autocomplete"))
+//		{
+//			String query = req.getParameter("query");
+//			Map<String,String> suggestions = new HashMap<String, String>();
+//			String json = "{"
+//					+	"\""+query+"\":\"Li\","
+//					+	"\"suggestions\":[";
+//			//Map<String,String> externalApps = Utils.externalApps();
+//			  //for(String appId:externalApps.keySet())
+//			  //{
+//			String appId = "http://astudyhall.appspot.com/";
+//			try {
+//				suggestions = JsonUtils.parseSearchSuggestionsFromDomain(query, appId);
+//			} catch (JSONException e) {
+//				//continue;
+//			}
+//			for(String itemId:suggestions.keySet())
+//			{
+//				json += "\""+suggestions.get(itemId)+"\",";
+//			}
+//			json = json.substring(0, json.length()-1);
+//			json += "]}";
+//			resp.setContentType("application/json");
+//			resp.getWriter().print(json);
+//			return;
+//		}
+//		
 		
 		
-		if(action.equalsIgnoreCase("autocomplete"))
-		{
 
  	}
 	

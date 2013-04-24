@@ -10,6 +10,8 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="css/itemObject.css" type="text/css" />
+		<link href="/css/item.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="/css/jquery.ratings.css" />
 		<style type="text/css">
 			
 		</style>
@@ -68,22 +70,35 @@
 				<%
 				    if(request.getParameter("searchQuery") != null)
 				    {
-					String[] compatibleApps = {"https://astudyhall.appspot.com/"};
+				    List<Entity> apps = Utils.getEntity("ExternalApp");
+				    String[] compatibleApps = new String[apps.size()];
+				    for(int x=0;x<compatibleApps.length;x++){
+				    	compatibleApps[x]=(String) apps.get(x).getProperty("appId");
+				    	
+				     }
+					
+					Utils.externalApps().keySet();
+					int countExtItem = 0;
 					for(int i=0;i<compatibleApps.length;i++)
 					{
 						
 					    String domainName = compatibleApps[i];
 						compatibleApps[i] = compatibleApps[i] + "webservices/search?query=" + request.getParameter("searchQuery");
-						compatibleApps[i] += "&limit=5&offset=0&auth_token=";
-						JSONObject json = JsonUtils.readJsonFromUrl(compatibleApps[i]);
-						
+						compatibleApps[i] += "&limit=5&offset=0&auth_token="+Utils.getAuthToken(domainName);
+						JSONObject json=null;
+						try{
+						json = JsonUtils.getJsonFromUrl(compatibleApps[i]);
+						}catch(Exception e){
+							continue;
+						}
 						%>
 						<div style="clear: both;">
 						<hr>
 						Results from <a href="<%=domainName%>"><%=domainName%></a>
 						<br><br>
-						<%@include file="item-object-foreign.txt"%> 						
 						</div>
+						<%@include file="item-object-foreign.txt"%> 						
+						
 						<%						
 					}
 				    }
@@ -93,6 +108,16 @@
 			</div>
 			
 			<%@include file="chat.jsp"%>	
+			<script>var itemrating=0</script>	
+			<script>
+			$(document).ready(function() {	
+				  $('#example-2').ratings(5,itemrating).bind('ratingchanged', function(event, data) {
+				    $('#example-rating-2').text(data.rating);
+				    //$.get("/items/addrating"+data.rating+"/");
+				  });
+				});
+			</script>
+	    	<script src="/js/jquery.ratings.js"></script>
 		<style>
 			body{
 				overflow: auto;

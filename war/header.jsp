@@ -111,6 +111,7 @@
 			</form>
 		</div>
 		<div id="dialog"></div>
+		<div id="item-dialog" ></div>
 	</div>
 	</div>
 		<script>
