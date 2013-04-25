@@ -9,7 +9,7 @@
 
 <html>
 	<head>
-		<link rel="stylesheet" href="css/itemObject.css" type="text/css" />
+		<link rel="stylesheet" href="/css/itemObject.css" type="text/css" />
 		<link href="/css/item.css" rel="stylesheet" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/jquery.ratings.css" />
 		<style type="text/css">
@@ -108,17 +108,10 @@
 			</div>
 			
 			<%@include file="chat.jsp"%>	
-			<script>var itemrating=0</script>	
-			<script>
-			$(document).ready(function() {	
-				  $('#example-2').ratings(5,itemrating).bind('ratingchanged', function(event, data) {
-				    $('#example-rating-2').text(data.rating);
-				    //$.get("/items/addrating"+data.rating+"/");
-				  });
-				});
-			</script>
+			<script>var itemrating=0</script>				
 	    	<script src="/js/jquery.ratings.js"></script>
 		<style>
+		
 			body{
 				overflow: auto;
 			}

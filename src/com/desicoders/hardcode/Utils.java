@@ -178,34 +178,38 @@ public class Utils extends DatastoreUtils{
 	public static String getUserDataJson(HttpServletRequest req){
 		Entity user = getUserFromSession(req);
 		String json;
+		String google_user_id="";
+		if(user.hasProperty("google_user_id"))
+		google_user_id = (String) user.getProperty("google_user_id");
 		json = "{"
-				
-				+"\"ga_id\" : \"\","
-				
-				+"\"name\" : \""+(String)user.getProperty("fname")+"\","
-				
-				+"\"bio\" : \""+(String)user.getProperty("Description")+"\","
-					
-				
-			    
-				+"\"items\":[";
-				
-				
-		
-		
-				List<Entity> items = ItemUtils.listPostedItems(user);
-				for(Entity item : items){
-					
-					json+=getJSONforItem(item, req)+",";
-				}
-				if(items.size()!=0)
-					json = json.substring(0, json.length()-1);
-				json+="]," 
-				+"\"email\" : \""+(String)user.getProperty("Email")+"\","
-				+"\"google_user_id\" : \"\""
-				+"}" ;
+
+		+"\"ga_id\" : \"\","
+
+		+"\"name\" : \""+(String)user.getProperty("fname")+"\","
+
+		+"\"bio\" : \""+(String)user.getProperty("Description")+"\","
+
+
+
+		+"\"items\":[";
+
+
+
+
+		List<Entity> items = ItemUtils.listPostedItems(user);
+		for(Entity item : items){
+
+		json+=getJSONforItem(item, req)+",";
+		}
+		if(items.size()!=0)
+		json = json.substring(0, json.length()-1);
+		json+="],"
+		+"\"email\" : \""+(String)user.getProperty("Email")+"\","
+		+"\"google_user_id\" : \""+google_user_id+"\""
+		+"}" ;
 
 		return json;
+
 	}
 	
 	public static String getJSONforItem(Entity item,HttpServletRequest req)

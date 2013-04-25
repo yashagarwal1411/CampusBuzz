@@ -92,7 +92,15 @@ public class SearchUtils {
 		try
 		{		
 			List<Entity> results = Utils.runQuery(q);
-			for(Entity item : results)
+			List<Entity> visibleItems = new ArrayList<Entity>();
+			for(Entity item:results)
+			{
+				if(ItemUtils.areDetailsVisible(item,null))
+				{
+					visibleItems.add(item);
+				}
+			}
+			for(Entity item : visibleItems)
 			{
 				_log.info("title is :" + item.getProperty("Title").toString());
 				//suggestions.add(item.getProperty("Title").toString());

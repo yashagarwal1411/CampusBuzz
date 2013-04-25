@@ -188,6 +188,7 @@ public class UserServlet extends HttpServlet {
 			User user = userService.getCurrentUser();
 			if (user != null) {
 				String email = user.getEmail();
+				String google_user_id= user.getUserId();
 				Filter f = FilterOperator.EQUAL.of("Email", email);
 				Query q = new Query("User").setFilter(f);
 				List<Entity> users = Utils.runQuery(q);
@@ -213,6 +214,8 @@ public class UserServlet extends HttpServlet {
 					mUser.setProperty("lname", "");
 					mUser.setProperty("PicBlobKey", "null");
 					mUser.setProperty("Description", "");
+					mUser.setProperty("google_user_id", google_user_id);
+
 					Utils.put(mUser);
 					_log.info("SignUp via google account using user service "+user.toString());
 					req.getSession().setAttribute("userKey", mUser.getKey());
@@ -281,7 +284,7 @@ public class UserServlet extends HttpServlet {
 			// JSON content to post
 			String userJson = Utils.getUserDataJson(req);
 			String appId= req.getParameter("appId");
-			appId = appId.substring(1, appId.length()-1);
+			//appId = appId.substring(1, appId.length()-1);
 			String authToken = Utils.getAuthToken(appId);
 			JSONObject exportResult;
 			//try {
