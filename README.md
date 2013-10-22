@@ -1,7 +1,7 @@
 CampusBuzz
 ==========
 
-A online goods bartering website in Java built for Google app engine.
+A online goods bartering website written in Java for Google app engine.
 
 A demo can be found at http://campus-buzz.appspot.com.
 
